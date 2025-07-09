@@ -5,7 +5,7 @@ let dn, max_data_points, k, iters;
 
 function drawSingleLetterCandidate() {
   noFill();
-  noLoop();
+  // noLoop();
   stroke("#282828");
   // strokeWeight(1);
 

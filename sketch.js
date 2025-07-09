@@ -1,9 +1,9 @@
-// from : https://editor.p5js.org/boxheadroom/sketches/qRmnvrWjo
+// from: https://editor.p5js.org/boxheadroom/sketches/qRmnvrWjo
 // using Tesseract.js OCR
 //https://tesseract.projectnaptha.com/
 
 // notes:
-//this is actualy not a good ocr for handwritting, not in eng and not in heb - which makes it great for us
+// this is actualy not a good ocr for handwritting, not in eng and not in heb - which makes it great for us
 // מה יקרה אם אתן תמונות של אותיות מפוסטרים?
 // האם זה נותן אחוזי ודאות? האם טפשר רף ודאות מסויים לייצא?
 
@@ -11,29 +11,20 @@
 // visually interesting to add data? tech-y?
 
 // better tesseract.js code in p5?
-// later- other ocr?
 
-let 
-  // R = 20,
-  B = 220;
+let backgroundcolor = 220;
 let worker;
-let c;
+let canvas;
 let inp;
 let dataText;
+let soundVisualizerCanvas;
 
-// to do both: 
-// lng = ['eng', 'heb'];
-// but need to prioritize one if so 
+let soundController; // our central sound input manager
 
 
-// lng="eng";
-// let CHAR_WHITELIST="ABCDEFGHIJKLMNOPQRSTUVWXYZ"+
-//     "abcdefghijklmnopqrstuvwxyz";
 
-lng = "heb";
+let lng = "heb";
 let CHAR_WHITELIST = "אבגדהוזחטיכלמנסעפצקרשתףםךן";
-
-
 
 function preload() {
   // init Tesseract
@@ -42,7 +33,7 @@ function preload() {
 
 function setup() {
   
-  textFont("IBM Plex Sans Hebrew");
+  textFont("IBM Plex Sans Hebrew"); // from google fonts
   
   // ui
   btnGenerate = createButton("Generate");
@@ -64,10 +55,21 @@ function setup() {
   });
 
   // c = createCanvas(windowWidth-30, windowHeight-30);
-  c = createCanvas(300, 300);
+  canvas = createCanvas(300, 300);
+  // canvas.parent("canvas-container");
+
+  soundVisualizerCanvas = createGraphics(300, 300);
+  // soundVisualizerCanvas.parent("visualizer-container");
+
   reset();
   // stroke(0);
-  // strokeWeight(R);
+
+  btnMic = createButton("Mic ON/OFF");
+  btnMic.mousePressed(() => {
+    soundController.toggleMic();
+  });
+
+  soundController = new SoundController();
   
   // init Tesseract
   worker
@@ -82,18 +84,25 @@ function setup() {
       })
     );
   // console.log(worker);
+
+
 }
 
 function draw() {
-  noLoop();
+  // cont. 'draw' of data
+  if (soundController) {
+    soundController.update(); 
+    soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
+    image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
+  }
 }
 
 function reset() {
-  background(B);
+  canvas.background(backgroundcolor);
 }
 
 function runOCR(){
-  worker.recognize(c.elt).then((arg) => 
+  worker.recognize(canvas.elt).then((arg) => 
     {
     // print this as visual data
     console.log(arg, arg.data, arg.data.text);
@@ -120,11 +129,14 @@ function runOCR(){
 }
 
 function drawDatatext(){    
+  push();
+  noStroke();
   textSize(22);
   fill("black");
   textAlign(RIGHT);
   text(dataText,width-30, height-30);
-  // add %
+  // ADD %
+  pop();
 }
 
 function generate()
@@ -132,7 +144,6 @@ function generate()
   reset();
   strokeWeight(10);
   drawSingleLetterCandidate();
-  noStroke();
   runOCR();
 }
 
