@@ -102,7 +102,7 @@ function runOCR(){
       // no bb produced when there is no detection
       console.log("Nothing detected");//, 
                   // arg.data.symbols[0].confidence);
-      
+    
       // print this with drawtext function:
       dataText = "לא זוהה";
       drawDatatext();
