@@ -24,7 +24,7 @@ let soundVisualizerCanvas;
 // TEMP this should be separate 
 var mic;
 let micEnabled = false;
-let ampAmplification = 700;
+let ampAmplification = 800;
 var fft;
 let amp;
 

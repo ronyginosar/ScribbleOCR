@@ -9,7 +9,7 @@ function drawSingleLetterCandidate(amp) {
   stroke("#282828");
   // strokeWeight(1);
 
-  iters = 3; // min is 2
+  iters = 2; // min is 2
   max_data_points = 10;
   data_spread = 2; // higher is narrower (smaller letter)
 
@@ -29,13 +29,14 @@ function drawSingleLetterCandidate(amp) {
 }
 
 function singleLetterCandidate(i, j, amp) {
+  strokeWeight(5);
   beginShape();
   for (let n = 0; n < max_data_points; n++) {
     const x = random(-scribbleSpacing / data_spread, scribbleSpacing / data_spread) + i;
     const y = random(-scribbleSpacing / data_spread, scribbleSpacing / data_spread) + j;
 
     push();
-    strokeWeight(10);
+    strokeWeight(1);
     // TODO emphasis: like dots in fonts?
     stroke("red");
     // When the getLevel() function is called inside the draw() function, it returns the volume of a sound at the given time of each frame
