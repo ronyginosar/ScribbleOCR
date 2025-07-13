@@ -9,7 +9,7 @@ function drawSingleLetterCandidate(amp) {
   stroke("#282828");
   // strokeWeight(1);
 
-  iters = 2; // min is 2
+  iters = 3; // min is 2
   max_data_points = 10;
   data_spread = 2; // higher is narrower (smaller letter)
 
@@ -36,9 +36,11 @@ function singleLetterCandidate(i, j, amp) {
 
     push();
     strokeWeight(10);
+    // TODO emphasis: like dots in fonts?
     stroke("red");
     // When the getLevel() function is called inside the draw() function, it returns the volume of a sound at the given time of each frame
     // circle(x, y, 3);
+    fill("red");
     circle(x, y, amp);
     pop();
 

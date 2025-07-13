@@ -20,8 +20,15 @@ let dataText;
 let soundVisualizerCanvas;
 // let soundController; // our central sound input manager
 
+
+// TEMP this should be separate 
 var mic;
 let micEnabled = false;
+let ampAmplification = 700;
+var fft;
+let amp;
+
+
 
 let lng = "heb";
 let CHAR_WHITELIST = "אבגדהוזחטיכלמנסעפצקרשתףםךן";
@@ -50,6 +57,9 @@ function setup() {
   // https://js6450.github.io/sound-p5-part1.html
   // The getLevel() function will return a number between 0 (silence) and 1 (maximum volume microphone can detect)
   mic = new p5.AudioIn();
+  fft = new p5.FFT();
+  amp = new p5.Amplitude();
+  amp.setInput(mic);
   btnMic.mousePressed(() => {   
     
     if (micEnabled) {
@@ -67,11 +77,11 @@ function setup() {
 
 
   canvas = createCanvas(300, 300);
-  soundVisualizerCanvas = createGraphics(300, 300);
+  // soundVisualizerCanvas = createGraphics(300, 300);
 
   reset();
 
-  soundController = new SoundController();
+  // soundController = new SoundController();
   
   // init Tesseract
   // worker
@@ -96,23 +106,34 @@ function draw() {
   // https://p5js.org/examples/advanced-canvas-rendering-create-graphics/
   // https://editor.p5js.org/Lark/sketches/XZP9GFYqs
 
-  if (soundController) {
-    soundController.update(); 
+  // if (soundController) {
+    // soundController.update(); 
   //   soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
   //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
-  }
+  // }
 
   // drawSingleLetterCandidate();
 
   if (micEnabled){
 
+    // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
     var level = mic.getLevel();
     console.log("Mic level: " + level.toPrecision(2));
+    // console.log("AMP : " + amp.getLevel()); // same as direct mic
+    
     // TEMP
     // todo value if mic is enabled
     // ellipse(width / 2, height / 2, level * 5000, level * 5000);
 
-    drawSingleLetterCandidate(level*700);
+
+    //FFT (Fast Fourier Transform) is an analysis algorithm that isolates individual audio frequencies within a waveform. The p5.FFT object can return two types of data in arrays via two different functions: waveform() and analyze()
+    // waveform(): Returns an array of amplitude values (between -1.0 and 1.0) along the time domain (a sample of time)
+    // analyze(): Returns an array of amplitude values (between 0 and 255) across the frequency spectrum.
+    var waveform = fft.waveform();
+    var spectrum = fft.analyze();
+
+    // let us amplify the amplitude data
+    drawSingleLetterCandidate(level*ampAmplification);
   }
 
 
