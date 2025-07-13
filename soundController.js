@@ -29,11 +29,32 @@ class SoundController {
   //   if (this.visualY.length > width) this.visualY.shift();
   // }
 
+  // getMode() {
+  //   if (!this.enabled) return "curve";
+  //   if (this.level > 0.15) return "dotted";
+  //   else if (this.level > 0.05) return "chaotic";
+  //   else return "curve";
+
+    
+  // }
+
   getMode() {
-    if (!this.enabled) return "curve";
-    if (this.level > 0.15) return "dotted";
-    else if (this.level > 0.05) return "chaotic";
-    else return "curve";
+    if (!this.enabled) {
+      console.log("mode: curve (mic disabled)");
+      return "curve";
+    }
+  
+    let mode;
+    if (this.level > 0.015) {
+      mode = "dotted";
+    } else if (this.level > 0.005) {
+      mode = "chaotic";
+    } else {
+      mode = "curve";
+    }
+  
+    console.log("mode:", mode);
+    return mode;
   }
 
   update() {

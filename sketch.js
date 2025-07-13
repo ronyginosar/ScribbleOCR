@@ -37,12 +37,13 @@ function setup() {
   btnOcr = createButton("OCR");
   btnReset = createButton("RESET");
   btnMic = createButton("Mic ON/OFF");
+  btnPause = createButton("Pause");
 
   btnOcr.mousePressed(() => { runOCR(); });   // when we press the button - recognize the canvas drawing
   btnReset.mousePressed(() => { reset(); });
   btnGenerate.mousePressed(() => { generate(); });
   btnMic.mousePressed(() => { soundController.toggleMic(); });
-
+  btnPause.mousePressed(() => { noLoop(); });
 
   // c = createCanvas(windowWidth-30, windowHeight-30);
   canvas = createCanvas(300, 300);
@@ -85,6 +86,9 @@ function draw() {
   //   soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
   //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
   }
+
+  generate();
+  frameRate(1); // limit to 30 fps
 }
 
 function reset() {
@@ -132,8 +136,17 @@ function drawDatatext(){
 function generate()
 {
   reset();
-  strokeWeight(10);
-  drawSingleLetterCandidate();
+  // strokeWeight(10);
+  // drawSingleLetterCandidate();
+
+  //
+  soundController.update(); // get current mic level
+  const vol = soundController.level;
+  const mode = soundController.getMode();
+
+  drawScribbleSound(mode, vol); // delegate to bezierScribble.js
+
+
   runOCR();
 }
 
