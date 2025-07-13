@@ -25,7 +25,7 @@ let CHAR_WHITELIST = "אבגדהוזחטיכלמנסעפצקרשתףםךן";
 
 function preload() {
   // init Tesseract
-  worker = Tesseract.createWorker(lng);
+  // worker = Tesseract.createWorker(lng);
 }
 
 function setup() {
@@ -33,14 +33,14 @@ function setup() {
   textFont("IBM Plex Sans Hebrew"); // from google fonts
   
   // ui
-  btnGenerate = createButton("Generate");
-  btnOcr = createButton("OCR");
-  btnReset = createButton("RESET");
+  // btnGenerate = createButton("Generate");
+  // btnOcr = createButton("OCR");
+  // btnReset = createButton("RESET");
   btnMic = createButton("Mic ON/OFF");
 
-  btnOcr.mousePressed(() => { runOCR(); });   // when we press the button - recognize the canvas drawing
-  btnReset.mousePressed(() => { reset(); });
-  btnGenerate.mousePressed(() => { generate(); });
+  // btnOcr.mousePressed(() => { runOCR(); });   // when we press the button - recognize the canvas drawing
+  // btnReset.mousePressed(() => { reset(); });
+  // btnGenerate.mousePressed(() => { generate(); });
   btnMic.mousePressed(() => { soundController.toggleMic(); });
 
   canvas = createCanvas(300, 300);
@@ -51,21 +51,23 @@ function setup() {
   soundController = new SoundController();
   
   // init Tesseract
-  worker
-    .load()
-    .then(() => worker.loadLanguage(lng))
-    .then(() => worker.initialize(lng))
-    .then(() =>
-      worker.setParameters({
-        tessedit_char_whitelist: CHAR_WHITELIST,
-        tessedit_pageseg_mode: Tesseract.PSM.SINGLE_CHAR  
+  // worker
+  //   .load()
+  //   .then(() => worker.loadLanguage(lng))
+  //   .then(() => worker.initialize(lng))
+  //   .then(() =>
+  //     worker.setParameters({
+  //       tessedit_char_whitelist: CHAR_WHITELIST,
+  //       tessedit_pageseg_mode: Tesseract.PSM.SINGLE_CHAR  
 
-      })
-    );
+  //     })
+  //   );
   // console.log(worker); // TODO
 }
 
 function draw() {
+  reset();
+  frameRate(10); // 10 fps
   // cont. 'draw' of data
   // todo return to this, see
   // https://p5js.org/examples/advanced-canvas-rendering-create-graphics/
@@ -76,6 +78,8 @@ function draw() {
   //   soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
   //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
   }
+
+  drawSingleLetterCandidate();
 }
 
 function reset() {

@@ -22,30 +22,9 @@ class SoundController {
     }
   }
 
-  // update() {
-  //   if (!this.enabled) return;
-  //   this.level = this.amp.getLevel();
-  //   this.visualY.push(this.level);
-  //   if (this.visualY.length > width) this.visualY.shift();
-  // }
-
-  getMode() {
-    if (!this.enabled) return "curve";
-    if (this.level > 0.15) return "dotted";
-    else if (this.level > 0.05) return "chaotic";
-    else return "curve";
-  }
 
   update() {
     if (!this.enabled) return;
-    // // console.log("Updating sound controller...");
-    // let raw = this.amp.getLevel();
-    // this.level = lerp(this.level, raw, 0.1); // Smooth the volume
-  
-    // this.visualY.push(this.level);
-    // if (this.visualY.length > 300) {
-    //   this.visualY.shift();
-    // }
 
     let raw = this.amp.getLevel();
     this.level = lerp(this.level, raw, 0.1);
