@@ -32,45 +32,50 @@ function setup() {
   
   textFont("IBM Plex Sans Hebrew"); // from google fonts
   
-  // ui
-  btnGenerate = createButton("Generate");
-  btnOcr = createButton("OCR");
-  btnReset = createButton("RESET");
+  // // ui
+  // btnGenerate = createButton("Generate");
+  // btnOcr = createButton("OCR");
+  // btnReset = createButton("RESET");
   btnMic = createButton("Mic ON/OFF");
-  btnPause = createButton("Pause");
+  // btnPause = createButton("Pause");
 
-  btnOcr.mousePressed(() => { runOCR(); });   // when we press the button - recognize the canvas drawing
-  btnReset.mousePressed(() => { reset(); });
-  btnGenerate.mousePressed(() => { generate(); });
+  // btnOcr.mousePressed(() => { runOCR(); });   // when we press the button - recognize the canvas drawing
+  // btnReset.mousePressed(() => { reset(); });
+  // btnGenerate.mousePressed(() => { generate(); });
   btnMic.mousePressed(() => { soundController.toggleMic(); });
-  btnPause.mousePressed(() => { noLoop(); });
+  // btnPause.mousePressed(() => { noLoop(); });
 
-  // c = createCanvas(windowWidth-30, windowHeight-30);
+  // // c = createCanvas(windowWidth-30, windowHeight-30);
   canvas = createCanvas(300, 300);
-  // canvas.parent("canvas-container");
+  // // canvas.parent("canvas-container");
 
-  soundVisualizerCanvas = createGraphics(300, 300);
-  // soundVisualizerCanvas.parent("visualizer-container");
+  // soundVisualizerCanvas = createGraphics(300, 300);
+  // // soundVisualizerCanvas.parent("visualizer-container");
 
-  reset();
-  // stroke(0);
+  // reset();
+  // // stroke(0);
 
 
   soundController = new SoundController();
   
-  // init Tesseract
-  worker
-    .load()
-    .then(() => worker.loadLanguage(lng))
-    .then(() => worker.initialize(lng))
-    .then(() =>
-      worker.setParameters({
-        tessedit_char_whitelist: CHAR_WHITELIST,
-        tessedit_pageseg_mode: Tesseract.PSM.SINGLE_CHAR  
+  // // init Tesseract
+  // worker
+  //   .load()
+  //   .then(() => worker.loadLanguage(lng))
+  //   .then(() => worker.initialize(lng))
+  //   .then(() =>
+  //     worker.setParameters({
+  //       tessedit_char_whitelist: CHAR_WHITELIST,
+  //       tessedit_pageseg_mode: Tesseract.PSM.SINGLE_CHAR  
 
-      })
-    );
-  // console.log(worker);
+  //     })
+  //   );
+  // // console.log(worker);
+
+  for (let i = 0; i < scribbleLength; i++) {
+    scribblePoints.push(createVector(random(width), random(height)));
+  }
+  
 
 
 }
@@ -81,14 +86,23 @@ function draw() {
   // https://p5js.org/examples/advanced-canvas-rendering-create-graphics/
   // https://editor.p5js.org/Lark/sketches/XZP9GFYqs
 
-  if (soundController) {
-    soundController.update(); 
-  //   soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
-  //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
-  }
+  // if (soundController) {
+  //   soundController.update(); 
+  // //   soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
+  // //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
+  // }
 
-  generate();
-  frameRate(1); // limit to 30 fps
+  // generate();
+  frameRate(10); // limit to 30 fps
+
+  background(220);
+
+  soundController.update();
+  const vol = soundController.level;
+  const mode = soundController.getMode();
+
+  updateScribblePoints(vol);
+  drawScribble(mode, vol);
 }
 
 function reset() {

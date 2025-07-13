@@ -7,6 +7,10 @@ iters = 2; // min is 2
 max_data_points = 10;
 data_spread = 2; // higher is narrower (smaller letter)
 
+let scribblePoints = [];
+const scribbleLength = 10;
+
+
 function drawSingleLetterCandidate() {
   noFill();
   // noLoop();
@@ -86,13 +90,56 @@ function drawDottedScribble(i, j, spread, vol) {
   }
 }
 
-function drawChaoticScribble(i, j, spread) {
-  noFill();
-  beginShape();
-  for (let n = 0; n < 10; n++) {
-    let x = random(-scribbleSpacing * 2, scribbleSpacing * 2) + i;
-    let y = random(-scribbleSpacing * 2, scribbleSpacing * 2) + j;
-    vertex(x, y);
+// function drawChaoticScribble(i, j, spread) {
+//   noFill();
+//   beginShape();
+//   for (let n = 0; n < 10; n++) {
+//     let x = random(-scribbleSpacing * 2, scribbleSpacing * 2) + i;
+//     let y = random(-scribbleSpacing * 2, scribbleSpacing * 2) + j;
+//     vertex(x, y);
+//   }
+//   endShape();
+// }
+
+
+function updateScribblePoints(vol) {
+  const wiggle = map(vol, 0, 0.3, 0.2, 5);
+
+  for (let pt of scribblePoints) {
+    pt.x += random(-wiggle, wiggle);
+    pt.y += random(-wiggle, wiggle);
+
+    pt.x = constrain(pt.x, 0, width);
+    pt.y = constrain(pt.y, 0, height);
   }
-  endShape();
+}
+
+
+function drawScribble(mode, vol) {
+  if (mode === "curve") {
+    stroke(0);
+    strokeWeight(2);
+    noFill();
+    beginShape();
+    for (let pt of scribblePoints) {
+      curveVertex(pt.x, pt.y);
+    }
+    endShape();
+  } else if (mode === "chaotic") {
+    stroke(0);
+    strokeWeight(1);
+    noFill();
+    beginShape();
+    for (let pt of scribblePoints) {
+      vertex(pt.x + random(-5, 5), pt.y + random(-5, 5));
+    }
+    endShape();
+  } else if (mode === "dotted") {
+    noStroke();
+    fill(0);
+    for (let pt of scribblePoints) {
+      const r = map(vol, 0, 0.3, 2, 1000);
+      circle(pt.x, pt.y, r);
+    }
+  }
 }
