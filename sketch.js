@@ -43,17 +43,10 @@ function setup() {
   btnGenerate.mousePressed(() => { generate(); });
   btnMic.mousePressed(() => { soundController.toggleMic(); });
 
-
-  // c = createCanvas(windowWidth-30, windowHeight-30);
   canvas = createCanvas(300, 300);
-  // canvas.parent("canvas-container");
-
   soundVisualizerCanvas = createGraphics(300, 300);
-  // soundVisualizerCanvas.parent("visualizer-container");
 
   reset();
-  // stroke(0);
-
 
   soundController = new SoundController();
   
@@ -69,9 +62,7 @@ function setup() {
 
       })
     );
-  // console.log(worker);
-
-
+  // console.log(worker); // TODO
 }
 
 function draw() {
@@ -101,7 +92,7 @@ function runOCR(){
     {
       // no bb produced when there is no detection
       console.log("Nothing detected");//, 
-                  // arg.data.symbols[0].confidence);
+      // arg.data.symbols[0].confidence);
     
       // print this with drawtext function:
       dataText = "לא זוהה";

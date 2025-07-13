@@ -60,9 +60,6 @@ class SoundController {
   }
   
   drawVisualizer(graphicsCanvas) {
-    // graphicsCanvas.background(0, 0); // ensures old trails are erased
-    // graphicsCanvas.background(backgroundcolor);
-
     graphicsCanvas.stroke("green");
     graphicsCanvas.strokeWeight(1);
     graphicsCanvas.noFill();    

@@ -7,7 +7,7 @@ function drawSingleLetterCandidate() {
   noFill();
   stroke("#282828");
 
-  iters = 3; // min is 2
+  iters = 2; // min is 2
   max_data_points = 10;
   data_spread = 2; // higher is narrower (smaller letter)
 
