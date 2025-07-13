@@ -13,11 +13,13 @@ function drawSingleLetterCandidate() {
   max_data_points = 10;
   data_spread = 2; // higher is narrower (smaller letter)
 
-  if (width < height) {
-    dn = width / iters;
-  } else {
-    dn = height / iters;
-  }
+  // if (width < height) {
+  //   dn = width / iters;
+  // } else {
+  //   dn = height / iters;
+  // }
+
+  dn = min(width, height) / iters;
 
   for (let i = 0 + dn; i <= width - dn; i += dn) {
     for (let j = 0 + dn; j <= width - dn; j += dn) {
@@ -29,8 +31,8 @@ function drawSingleLetterCandidate() {
 function singleLetterCandidate(i, j) {
   beginShape();
   for (let n = 0; n < max_data_points; n++) {
-    x = random(-dn / data_spread, dn / data_spread) + i;
-    y = random(-dn / data_spread, dn / data_spread) + j;
+    const x = random(-dn / data_spread, dn / data_spread) + i;
+    const y = random(-dn / data_spread, dn / data_spread) + j;
 
     push();
     strokeWeight(10);

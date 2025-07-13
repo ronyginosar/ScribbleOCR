@@ -55,7 +55,7 @@ class SoundController {
       this.visualY.shift();
     }
 
-    console.log(this.level);
+    console.log("amp level " + (this.level*1000).toPrecision(4));
 
   }
   

@@ -18,10 +18,7 @@ let canvas;
 let inp;
 let dataText;
 let soundVisualizerCanvas;
-
 let soundController; // our central sound input manager
-
-
 
 let lng = "heb";
 let CHAR_WHITELIST = "אבגדהוזחטיכלמנסעפצקרשתףםךן";
@@ -39,20 +36,13 @@ function setup() {
   btnGenerate = createButton("Generate");
   btnOcr = createButton("OCR");
   btnReset = createButton("RESET");
-  
-  btnOcr.mousePressed(() => {
-    // when we press the button - recognize the canvas drawing
-    runOCR();
-  });
-  
-  btnReset.mousePressed(() => {
-    reset();
-  });
-  
-  btnGenerate.mousePressed(() => {
-    generate();
-    
-  });
+  btnMic = createButton("Mic ON/OFF");
+
+  btnOcr.mousePressed(() => { runOCR(); });   // when we press the button - recognize the canvas drawing
+  btnReset.mousePressed(() => { reset(); });
+  btnGenerate.mousePressed(() => { generate(); });
+  btnMic.mousePressed(() => { soundController.toggleMic(); });
+
 
   // c = createCanvas(windowWidth-30, windowHeight-30);
   canvas = createCanvas(300, 300);
@@ -64,10 +54,6 @@ function setup() {
   reset();
   // stroke(0);
 
-  btnMic = createButton("Mic ON/OFF");
-  btnMic.mousePressed(() => {
-    soundController.toggleMic();
-  });
 
   soundController = new SoundController();
   
@@ -90,10 +76,14 @@ function setup() {
 
 function draw() {
   // cont. 'draw' of data
+  // todo return to this, see
+  // https://p5js.org/examples/advanced-canvas-rendering-create-graphics/
+  // https://editor.p5js.org/Lark/sketches/XZP9GFYqs
+
   if (soundController) {
     soundController.update(); 
-    soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
-    image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
+  //   soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
+  //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
   }
 }
 
