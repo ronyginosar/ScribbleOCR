@@ -1,7 +1,15 @@
 // reference: https://openprocessing.org/sketch/1794772
 // // random between vertex and curve vertex?
 
-let dn, max_data_points, k, iters;
+let scribbleSpacing, max_data_points, k, iters;
+
+iters = 2; // min is 2
+max_data_points = 10;
+data_spread = 2; // higher is narrower (smaller letter)
+
+let scribblePoints = [];
+const scribbleLength = 10;
+
 
 function drawSingleLetterCandidate() {
   noFill();
@@ -9,20 +17,16 @@ function drawSingleLetterCandidate() {
   stroke("#282828");
   // strokeWeight(1);
 
-  iters = 2; // min is 2
-  max_data_points = 10;
-  data_spread = 2; // higher is narrower (smaller letter)
-
   // if (width < height) {
   //   dn = width / iters;
   // } else {
   //   dn = height / iters;
   // }
 
-  dn = min(width, height) / iters;
+  scribbleSpacing = min(width, height) / iters;
 
-  for (let i = 0 + dn; i <= width - dn; i += dn) {
-    for (let j = 0 + dn; j <= width - dn; j += dn) {
+  for (let i = 0 + scribbleSpacing; i <= width - scribbleSpacing; i += scribbleSpacing) {
+    for (let j = 0 + scribbleSpacing; j <= width - scribbleSpacing; j += scribbleSpacing) {
       singleLetterCandidate(i, j);
     }
   }
@@ -31,8 +35,8 @@ function drawSingleLetterCandidate() {
 function singleLetterCandidate(i, j) {
   beginShape();
   for (let n = 0; n < max_data_points; n++) {
-    const x = random(-dn / data_spread, dn / data_spread) + i;
-    const y = random(-dn / data_spread, dn / data_spread) + j;
+    const x = random(-scribbleSpacing / data_spread, scribbleSpacing / data_spread) + i;
+    const y = random(-scribbleSpacing / data_spread, scribbleSpacing / data_spread) + j;
 
     push();
     strokeWeight(10);
@@ -46,6 +50,3 @@ function singleLetterCandidate(i, j) {
   }
   endShape();
 }
-
-//
-
