@@ -3,7 +3,7 @@
 
 let scribbleSpacing, max_data_points, k, iters;
 
-function drawSingleLetterCandidate() {
+function drawSingleLetterCandidate(amp) {
   noFill();
   // noLoop();
   stroke("#282828");
@@ -23,12 +23,12 @@ function drawSingleLetterCandidate() {
 
   for (let i = 0 + scribbleSpacing; i <= width - scribbleSpacing; i += scribbleSpacing) {
     for (let j = 0 + scribbleSpacing; j <= width - scribbleSpacing; j += scribbleSpacing) {
-      singleLetterCandidate(i, j);
+      singleLetterCandidate(i, j, amp);
     }
   }
 }
 
-function singleLetterCandidate(i, j) {
+function singleLetterCandidate(i, j, amp) {
   beginShape();
   for (let n = 0; n < max_data_points; n++) {
     const x = random(-scribbleSpacing / data_spread, scribbleSpacing / data_spread) + i;
@@ -37,7 +37,9 @@ function singleLetterCandidate(i, j) {
     push();
     strokeWeight(10);
     stroke("red");
-    circle(x, y, 3);
+    // When the getLevel() function is called inside the draw() function, it returns the volume of a sound at the given time of each frame
+    // circle(x, y, 3);
+    circle(x, y, amp);
     pop();
 
     // random between vertex and curve vertex?

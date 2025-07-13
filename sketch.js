@@ -47,10 +47,11 @@ function setup() {
   // btnMic.mousePressed(() => { soundController.toggleMic(); });
   
   // TEMP
+  // https://js6450.github.io/sound-p5-part1.html
   // The getLevel() function will return a number between 0 (silence) and 1 (maximum volume microphone can detect)
   mic = new p5.AudioIn();
   btnMic.mousePressed(() => {   
-    micEnabled = !micEnabled;
+    
     if (micEnabled) {
       // btnMic.html("Mic OFF");
       console.log("Mic OFF");
@@ -60,7 +61,7 @@ function setup() {
       console.log("Mic ON");
       mic.start();
     }
-     
+    micEnabled = !micEnabled;
   });
 
 
@@ -101,10 +102,21 @@ function draw() {
   //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
   }
 
-  drawSingleLetterCandidate();
+  // drawSingleLetterCandidate();
 
-  var level = mic.getLevel();
-  ellipse(width / 2, height / 2, level * 500, level * 500)
+  if (micEnabled){
+
+    var level = mic.getLevel();
+    console.log("Mic level: " + level.toPrecision(2));
+    // TEMP
+    // todo value if mic is enabled
+    // ellipse(width / 2, height / 2, level * 5000, level * 5000);
+
+    drawSingleLetterCandidate(level*700);
+  }
+
+
+
 
 }
 
