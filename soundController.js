@@ -7,6 +7,7 @@ class SoundController {
     this.level = 0;
     this.visualY = [];
     this.enabled = false;
+    this.fft = new p5.FFT();
   }
 
   toggleMic() {
@@ -52,4 +53,16 @@ class SoundController {
   
     graphicsCanvas.endShape();
   }
+
+  getSoundData() {
+    const fft = this.fft.analyze();
+    return {
+      amplitude: this.level,
+      centroid: this.fft.getCentroid(),
+      bass: this.fft.getEnergy("bass"),
+      mid: this.fft.getEnergy("mid"),
+      phase: frameCount * 0.05,
+    };
+  }
+  
 }

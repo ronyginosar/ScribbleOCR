@@ -5,12 +5,19 @@ let scribbleSpacing, max_data_points, k, iters;
 
 function drawSingleLetterCandidate() {
   noFill();
+  // noLoop();
   stroke("#282828");
-  strokeWeight(10);
+  // strokeWeight(1);
 
   iters = 2; // min is 2
   max_data_points = 10;
   data_spread = 2; // higher is narrower (smaller letter)
+
+  // if (width < height) {
+  //   dn = width / iters;
+  // } else {
+  //   dn = height / iters;
+  // }
 
   scribbleSpacing = min(width, height) / iters;
 

@@ -18,7 +18,10 @@ let canvas;
 let inp;
 let dataText;
 let soundVisualizerCanvas;
-let soundController; // our central sound input manager
+// let soundController; // our central sound input manager
+
+var mic;
+let micEnabled = false;
 
 let lng = "heb";
 let CHAR_WHITELIST = "אבגדהוזחטיכלמנסעפצקרשתףםךן";
@@ -41,7 +44,26 @@ function setup() {
   // btnOcr.mousePressed(() => { runOCR(); });   // when we press the button - recognize the canvas drawing
   // btnReset.mousePressed(() => { reset(); });
   // btnGenerate.mousePressed(() => { generate(); });
-  btnMic.mousePressed(() => { soundController.toggleMic(); });
+  // btnMic.mousePressed(() => { soundController.toggleMic(); });
+  
+  // TEMP
+  // The getLevel() function will return a number between 0 (silence) and 1 (maximum volume microphone can detect)
+  mic = new p5.AudioIn();
+  btnMic.mousePressed(() => {   
+    micEnabled = !micEnabled;
+    if (micEnabled) {
+      // btnMic.html("Mic OFF");
+      console.log("Mic OFF");
+      mic.stop();
+    }
+    else {
+      console.log("Mic ON");
+      mic.start();
+    }
+     
+  });
+
+
 
   canvas = createCanvas(300, 300);
   soundVisualizerCanvas = createGraphics(300, 300);
@@ -80,6 +102,10 @@ function draw() {
   }
 
   drawSingleLetterCandidate();
+
+  var level = mic.getLevel();
+  ellipse(width / 2, height / 2, level * 500, level * 500)
+
 }
 
 function reset() {
