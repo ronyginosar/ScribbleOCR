@@ -6,6 +6,7 @@ let scribbleSpacing, max_data_points, k, iters;
 function drawSingleLetterCandidate() {
   noFill();
   stroke("#282828");
+  strokeWeight(10);
 
   iters = 2; // min is 2
   max_data_points = 10;

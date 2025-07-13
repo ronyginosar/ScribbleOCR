@@ -67,7 +67,7 @@ function setup() {
 
 function draw() {
   reset();
-  frameRate(10); // 10 fps
+  frameRate(5); // 10 fps
   // cont. 'draw' of data
   // todo return to this, see
   // https://p5js.org/examples/advanced-canvas-rendering-create-graphics/
