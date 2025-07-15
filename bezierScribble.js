@@ -125,9 +125,19 @@ function singleLetterCandidateFromWaveform(i, j, waveform) {
     // let y = j + dy;
 
     let jitterX = random(-scribble_spacing / 4, scribble_spacing / 4);
-let jitterY = random(-scribble_spacing / 4, scribble_spacing / 4);
-let x = i + dx + jitterX;
-let y = j + dy + jitterY;
+    let jitterY = random(-scribble_spacing / 4, scribble_spacing / 4);
+    let x = i + dx + jitterX;
+    let y = j + dy + jitterY;
+
+    // Use a unique seed per scribble for noise variation
+  // let noiseSeedX = random(1000);
+  // let noiseSeedY = random(1000);
+
+  //   let noiseOffsetX = map(noise(noiseSeedX + n * 0.1), 0, 1, -scribble_spacing / 4, scribble_spacing / 4);
+  //   let noiseOffsetY = map(noise(noiseSeedY + n * 0.1), 0, 1, -scribble_spacing / 4, scribble_spacing / 4);
+
+  //   let x = i + dx + noiseOffsetX;
+  //   let y = j + dy + noiseOffsetY;
 
     // optional debug circles:
     push(); fill("red"); noStroke(); circle(x, y, 3); pop();
