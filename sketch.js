@@ -137,11 +137,14 @@ function draw() {
 
     // let us amplify the amplitude data
     // drawSingleLetterCandidate(level*ampAmplification);
+    drawSingleLetterCandidateWave(waveform);
 
     // background(0, 30);
         // fill(255);
 
-    drawWaveform(waveform);
+    // drawWaveform(waveform);
+
+    // drawSingleLetterCandidate(waveform);
 
 
   }
