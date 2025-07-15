@@ -24,7 +24,7 @@ let soundVisualizerCanvas;
 // TEMP this should be separate 
 var mic;
 let micEnabled = false;
-let ampAmplification = 800;
+let ampAmplification = 1000;
 var fft;
 let amp;
 
@@ -58,6 +58,7 @@ function setup() {
   // The getLevel() function will return a number between 0 (silence) and 1 (maximum volume microphone can detect)
   mic = new p5.AudioIn();
   fft = new p5.FFT();
+  fft.setInput(mic); //  set the input source for the FFT object to the mic
   amp = new p5.Amplitude();
   amp.setInput(mic);
   btnMic.mousePressed(() => {   
@@ -118,7 +119,7 @@ function draw() {
 
     // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
     var level = mic.getLevel();
-    console.log("Mic level: " + level.toPrecision(2));
+    // console.log("Mic level: " + level.toPrecision(2));
     // console.log("AMP : " + amp.getLevel()); // same as direct mic
     
     // TEMP
@@ -129,11 +130,20 @@ function draw() {
     //FFT (Fast Fourier Transform) is an analysis algorithm that isolates individual audio frequencies within a waveform. The p5.FFT object can return two types of data in arrays via two different functions: waveform() and analyze()
     // waveform(): Returns an array of amplitude values (between -1.0 and 1.0) along the time domain (a sample of time)
     // analyze(): Returns an array of amplitude values (between 0 and 255) across the frequency spectrum.
-    var waveform = fft.waveform();
+    var waveform = fft.waveform(); 
+    // console.log("Waveform: " + waveform);
+    // console.log("Waveform: " + waveform.length);
     var spectrum = fft.analyze();
 
     // let us amplify the amplitude data
-    drawSingleLetterCandidate(level*ampAmplification);
+    // drawSingleLetterCandidate(level*ampAmplification);
+
+    // background(0, 30);
+        // fill(255);
+
+    drawWaveform(waveform);
+
+
   }
 
 

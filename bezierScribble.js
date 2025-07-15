@@ -52,3 +52,24 @@ function singleLetterCandidate(i, j, amp) {
   endShape();
 }
 
+function drawWaveform(waveform)
+{
+  let waveformAmplification = 5000; // how much to amplify the waveform. since we're drawing circles - we get an interesting pattern above value of 3
+  let waveformCircleSize = 3; 
+  fill("red");
+  noStroke();
+  for (var i = 0; i < waveform.length; i++) {
+    var x = map(i, 0, waveform.length, 0, width);
+    // var y = map(waveform[i]*waveformAmplification, -1, 1, height, 0);
+    var y = height / 2 + sin(x * 0.01) * waveform[i] * waveformAmplification;
+    ellipse(x, y, waveformCircleSize, waveformCircleSize);
+  }
+}
+
+
+// function locationMapper(waveform) {
+//   // Map the x and y coordinates to a new range
+//   let mappedX = map(x, 0, width, -1, 1);
+//   let mappedY = map(waveform[i], -1, 1, height, 0);
+//   return { mappedX, mappedY };
+// }
