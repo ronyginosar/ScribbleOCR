@@ -139,6 +139,10 @@ function singleLetterCandidateFromWaveform(i, j, waveform) {
   //   let x = i + dx + noiseOffsetX;
   //   let y = j + dy + noiseOffsetY;
 
+  // go back to noise and use: https://p5js.org/reference/p5/noiseDetail/
+  //https://p5js.org/reference/p5/randomGaussian/
+  // or 2d? https://p5js.org/reference/p5/noise/
+
     // optional debug circles:
     push(); fill("red"); noStroke(); circle(x, y, 3); pop();
     // drawControllerPoints(x,y,amp); TODO generalize
