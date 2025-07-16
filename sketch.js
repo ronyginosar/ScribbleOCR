@@ -61,6 +61,8 @@ function setup() {
   fft.setInput(mic); //  set the input source for the FFT object to the mic
   amp = new p5.Amplitude();
   amp.setInput(mic);
+  peakDetect = new p5.PeakDetect();
+  
   btnMic.mousePressed(() => {   
     
     if (micEnabled) {
@@ -145,6 +147,10 @@ function draw() {
     // drawWaveform(waveform);
 
     // drawSingleLetterCandidate(waveform);
+
+
+    var peaks = peakDetect.update(spectrum);
+    
 
 
   }
