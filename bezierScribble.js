@@ -125,7 +125,7 @@ function singleLetterCandidateFromWaveform(i, j, waveform, amp) {
     // let x = i + dx;
     // let y = j + dy;
 
-    jitter_amount = scribble_spacing / 8; // how much to jitter the points
+    jitter_amount = scribble_spacing/4; // how much to jitter the points
 
     let jitterX = random(-jitter_amount, jitter_amount);
     let jitterY = random(-jitter_amount, jitter_amount);
@@ -146,7 +146,7 @@ function singleLetterCandidateFromWaveform(i, j, waveform, amp) {
   //   let x = i + dx + noiseOffsetX;
   //   let y = j + dy + noiseOffsetY;
 
-  // future
+  // TODO add more noise for more variation
   // go back to noise and use: https://p5js.org/reference/p5/noiseDetail/
   //https://p5js.org/reference/p5/randomGaussian/
   // or 2d? https://p5js.org/reference/p5/noise/
