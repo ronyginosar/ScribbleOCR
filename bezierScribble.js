@@ -1,10 +1,12 @@
 // reference: https://openprocessing.org/sketch/1794772
 // // random between vertex and curve vertex?
+// TODO clean!
+
 
 let scribble_spacing, max_data_points_per_scribble, k, numberOfScribbles;
 let waveformAmplification = 100; // how much to amplify the waveform. since we're drawing circles - we get an interesting pattern above value of 3
 
-number_of_scribbles = 3; // min is 2, not exactly "number"...
+number_of_scribbles = 2; // min is 2, not exactly "number"...
 max_data_points_per_scribble = 10;
 data_spread_per_scribble = 2; // higher is narrower (smaller letter)
 constrain_scribble_range = 50;
@@ -105,6 +107,7 @@ function drawWaveform(waveform)
 
 
 function singleLetterCandidateFromWaveform(i, j, waveform, amp) {
+  // sound waveform controls how far and in which direction each point of the scribble moves from its center. Loud sounds stretch the scribble outward, quiet sounds keep it tight.
   // TODO still need to solve the scale down, so that we can't draw outside the canvas
   strokeWeight(4);
   beginShape();
@@ -114,21 +117,25 @@ function singleLetterCandidateFromWaveform(i, j, waveform, amp) {
 
   for (let n = 0; n < max_data_points_per_scribble; n++) {
     let index = n * spacing;
-    let amp = waveform[index];
+    // let amp = waveform[index]; // TODO TEMP
+    // spectrum[index] gives an amplitude in dB-like scale, from 0 (silence) to 255 (max energy at that frequency bin).
+    // To use it in the same logic that expects amp ∈ [-1, 1], we remap it.
+    let amp = map(spectrum[index], 0, 255, -1, 1); // todo not enough to change this, need different logic
 
-    let carrierFreq = 0.03;
-    let angle = i * carrierFreq; // use i as a seed for variety across grid
+    let carrierFreq = 0.03; // a "carrier frequency", the base frequency that you modulate, like "angleOffsetPerScribble"
+    let angle = i * carrierFreq; // use i as a "seed" for variety across grid - o each scribble has a slightly different orientation or "twist"
     // without music, looks a bit like the base of it which is a circle
+
+    // Multiply direction × waveform value
+    // → This scales the movement based on the sound.
+    // Louder or more intense parts of the waveform stretch the scribble outward, and quieter parts pull it in.
+    
     let dx = sin(angle + n) * amp * waveformAmplification * scribble_spacing / 2;
     let dy = cos(angle + n) * amp * waveformAmplification * scribble_spacing / 2;
 
-    // let x = i + dx;
-    // let y = j + dy;
-
-    jitter_amount = scribble_spacing/4; // how much to jitter the points
-
-    let jitterX = random(-jitter_amount, jitter_amount);
-    let jitterY = random(-jitter_amount, jitter_amount);
+    jitter_range = scribble_spacing/4; // how much to jitter the points
+    let jitterX = random(-jitter_range, jitter_range);
+    let jitterY = random(-jitter_range, jitter_range);
     let x = i + dx + jitterX;
     let y = j + dy + jitterY;
 
