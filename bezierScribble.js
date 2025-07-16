@@ -4,9 +4,10 @@
 let scribble_spacing, max_data_points_per_scribble, k, numberOfScribbles;
 let waveformAmplification = 100; // how much to amplify the waveform. since we're drawing circles - we get an interesting pattern above value of 3
 
-number_of_scribbles = 4; // min is 2, not exactly "number"...
+number_of_scribbles = 2; // min is 2, not exactly "number"...
 max_data_points_per_scribble = 10;
 data_spread_per_scribble = 2; // higher is narrower (smaller letter)
+constrain_scribble_range = 50;
 
 
 function drawSingleLetterCandidate(amp) { // TODO rename this, it's not the single... it draws a matrix
@@ -124,10 +125,16 @@ function singleLetterCandidateFromWaveform(i, j, waveform) {
     // let x = i + dx;
     // let y = j + dy;
 
-    let jitterX = random(-scribble_spacing / 4, scribble_spacing / 4);
-    let jitterY = random(-scribble_spacing / 4, scribble_spacing / 4);
+    jitter_amount = scribble_spacing / 8; // how much to jitter the points
+
+    let jitterX = random(-jitter_amount, jitter_amount);
+    let jitterY = random(-jitter_amount, jitter_amount);
     let x = i + dx + jitterX;
     let y = j + dy + jitterY;
+
+    // verify that the x and y are within the canvas bounds
+    x = constrain(x, 0+constrain_scribble_range, width-constrain_scribble_range);
+    y = constrain(y, 0+constrain_scribble_range, height-constrain_scribble_range);
 
     // Use a unique seed per scribble for noise variation
   // let noiseSeedX = random(1000);
