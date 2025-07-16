@@ -4,7 +4,7 @@
 let scribble_spacing, max_data_points_per_scribble, k, numberOfScribbles;
 let waveformAmplification = 100; // how much to amplify the waveform. since we're drawing circles - we get an interesting pattern above value of 3
 
-number_of_scribbles = 2; // min is 2, not exactly "number"...
+number_of_scribbles = 3; // min is 2, not exactly "number"...
 max_data_points_per_scribble = 10;
 data_spread_per_scribble = 2; // higher is narrower (smaller letter)
 constrain_scribble_range = 50;
@@ -23,14 +23,14 @@ function drawSingleLetterCandidate(amp) { // TODO rename this, it's not the sing
 }
 
 
-function drawSingleLetterCandidateWave(waveform) {
+function drawSingleLetterCandidateWave(waveform, amp) {
     noFill();
     stroke("#282828");
     scribble_spacing = min(width, height) / number_of_scribbles;
     for (let i = 0 + scribble_spacing; i <= width - scribble_spacing; i += scribble_spacing) {
       for (let j = 0 + scribble_spacing; j <= height - scribble_spacing; j += scribble_spacing) {
         // draw single letters around the i,j of the matrix
-        singleLetterCandidateFromWaveform(i, j, waveform);
+        singleLetterCandidateFromWaveform(i, j, waveform, amp);
   
       }
     }
@@ -104,7 +104,7 @@ function drawWaveform(waveform)
 // }
 
 
-function singleLetterCandidateFromWaveform(i, j, waveform) {
+function singleLetterCandidateFromWaveform(i, j, waveform, amp) {
   // TODO still need to solve the scale down, so that we can't draw outside the canvas
   strokeWeight(4);
   beginShape();
@@ -146,13 +146,14 @@ function singleLetterCandidateFromWaveform(i, j, waveform) {
   //   let x = i + dx + noiseOffsetX;
   //   let y = j + dy + noiseOffsetY;
 
+  // future
   // go back to noise and use: https://p5js.org/reference/p5/noiseDetail/
   //https://p5js.org/reference/p5/randomGaussian/
   // or 2d? https://p5js.org/reference/p5/noise/
 
     // optional debug circles:
-    push(); fill("red"); noStroke(); circle(x, y, 3); pop();
-    // drawControllerPoints(x,y,amp); TODO generalize
+    // push(); fill("red"); noStroke(); circle(x, y, 3); pop();
+    drawControllerPoints(x,y,amp*ampAmplification); // TODO generalize
 
     curveVertex(x, y);
   }
