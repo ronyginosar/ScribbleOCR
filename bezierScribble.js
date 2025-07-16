@@ -117,10 +117,10 @@ function singleLetterCandidateFromWaveform(i, j, waveform, amp) {
 
   for (let n = 0; n < max_data_points_per_scribble; n++) {
     let index = n * spacing;
-    // let amp = waveform[index]; // TODO TEMP
+    let amp = waveform[index]; // TODO TEMP
     // spectrum[index] gives an amplitude in dB-like scale, from 0 (silence) to 255 (max energy at that frequency bin).
     // To use it in the same logic that expects amp ∈ [-1, 1], we remap it.
-    let amp = map(spectrum[index], 0, 255, -1, 1); // todo not enough to change this, need different logic
+    // let amp = map(spectrum[index], 0, 255, -1, 1); // todo not enough to change this, need different logic
 
     let carrierFreq = 0.03; // a "carrier frequency", the base frequency that you modulate, like "angleOffsetPerScribble"
     let angle = i * carrierFreq; // use i as a "seed" for variety across grid - o each scribble has a slightly different orientation or "twist"
