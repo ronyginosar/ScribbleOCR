@@ -24,6 +24,22 @@ function drawSingleLetterCandidate(amp) { // TODO rename this, it's not the sing
   }
 }
 
+function drawSingleLetterPR() { // TODO rename this, it's not the single... it draws a matrix
+  noFill();
+  stroke("#282828");
+  scribble_spacing = min(width, height) / number_of_scribbles;
+  for (let i = 0 + scribble_spacing; i <= width - scribble_spacing; i += scribble_spacing) {
+    for (let j = 0 + scribble_spacing; j <= height - scribble_spacing; j += scribble_spacing) {
+      // draw single letters around the i,j of the matrix
+
+      max_data_points_per_scribble = floor(random(30, 50)); // random number of points per scribble
+      console.log("max_data_points_per_scribble: " + max_data_points_per_scribble);
+      singleLetterCandidate(i, j, 0, 20);
+    }
+  }
+}
+
+
 
 function drawSingleLetterCandidateWave(waveform, amp) {
     noFill();
@@ -51,8 +67,8 @@ function drawControllerPoints(x,y,amp)
   pop();
 }
 
-function singleLetterCandidate(i, j, amp) {
-  strokeWeight(5);
+function singleLetterCandidate(i, j, amp, strokeThickness = 5) {
+  strokeWeight(strokeThickness);
   beginShape();
   let scribble_range = scribble_spacing / data_spread_per_scribble;
   for (let n = 0; n < max_data_points_per_scribble; n++) {
