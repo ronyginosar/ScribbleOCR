@@ -39,6 +39,7 @@ function preload() {
 }
 
 function setup() {
+  pixelDensity(10);
   
   textFont("IBM Plex Sans Hebrew"); // from google fonts
   
@@ -47,11 +48,16 @@ function setup() {
   // btnOcr = createButton("OCR");
   // btnReset = createButton("RESET");
   btnMic = createButton("Mic ON/OFF");
+  btnExport = createButton("Export");
 
   // btnOcr.mousePressed(() => { runOCR(); });   // when we press the button - recognize the canvas drawing
   // btnReset.mousePressed(() => { reset(); });
   // btnGenerate.mousePressed(() => { generate(); });
   // btnMic.mousePressed(() => { soundController.toggleMic(); });
+
+  btnExport.mousePressed(() => { 
+    saveCanvas('scribble.png'); 
+  });
   
   // TEMP
   // https://js6450.github.io/sound-p5-part1.html
@@ -214,11 +220,12 @@ function draw() {
 
 }
 
-function mousePressed() {
+function doubleClicked() {
   // temp PRMODE
   // drawSingleLetterCandidate(10);
   // drawSingleLetterCandidate(0);
-  reset();
+  // reset();
+  canvas.background(backgroundcolor);
   drawSingleLetterPR();
   noLoop();
 }

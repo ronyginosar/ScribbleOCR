@@ -31,10 +31,14 @@ function drawSingleLetterPR() { // TODO rename this, it's not the single... it d
   for (let i = 0 + scribble_spacing; i <= width - scribble_spacing; i += scribble_spacing) {
     for (let j = 0 + scribble_spacing; j <= height - scribble_spacing; j += scribble_spacing) {
       // draw single letters around the i,j of the matrix
-
-      max_data_points_per_scribble = floor(random(30, 50)); // random number of points per scribble
+      data_spread_per_scribble = 1.5;
+      // max_data_points_per_scribble = floor(random(30, 50)); // random number of points per scribble
+      // max_data_points_per_scribble = floor(random(50, 70)); // random number of points per scribble
+      max_data_points_per_scribble = floor(random(70, 100)); // random number of points per scribble
       console.log("max_data_points_per_scribble: " + max_data_points_per_scribble);
-      singleLetterCandidate(i, j, 0, 20);
+      // singleLetterCandidate(i, j, 0, 20);
+      // singleLetterCandidate(i, j, 0, 15);
+      singleLetterCandidate(i, j, 0, 10);
     }
   }
 }
