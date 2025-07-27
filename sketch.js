@@ -39,7 +39,7 @@ function preload() {
 }
 
 function setup() {
-  pixelDensity(10);
+  pixelDensity(10); // TODO if pr mode
   
   textFont("IBM Plex Sans Hebrew"); // from google fonts
   

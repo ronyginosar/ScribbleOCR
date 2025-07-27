@@ -38,7 +38,7 @@ function drawSingleLetterPR() { // TODO rename this, it's not the single... it d
       console.log("max_data_points_per_scribble: " + max_data_points_per_scribble);
       // singleLetterCandidate(i, j, 0, 20);
       // singleLetterCandidate(i, j, 0, 15);
-      singleLetterCandidate(i, j, 0, 10);
+      singleLetterCandidate(i, j, 0, 5);
     }
   }
 }
