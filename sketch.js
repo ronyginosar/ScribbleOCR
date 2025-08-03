@@ -83,10 +83,11 @@ function setup() {
 
 // https://editor.p5js.org/MGOBRIAL/sketches/zxLypkBKZ
   // [freq1], [freq2], [threshold], [framesPerPeak]
-  let freq1 = 2; // low frequency
-  let freq2 = 20; // high frequency
-  let threshold = 0; // threshold for detecting a beat
-  let framesPerPeak = 2; // number of frames to wait before detecting another peak
+  // frequency range in Hz (e.g., 100, 1000 for voice)
+  let freq1 = 1; // low frequency
+  let freq2 = 200; // high frequency
+  let threshold = 0; // threshold for detecting a beat, between 0 and 1 (usually start with 0.15)
+  let framesPerPeak = 1; // number of frames to wait before detecting another peak (helps avoid double-detects)
   peakDetect = new p5.PeakDetect(freq1,freq2,threshold,framesPerPeak);
 
   
@@ -134,7 +135,7 @@ function setup() {
 }
 
 function draw() {
-  reset();
+  // reset();
   frameRate(5); // 10 fps
   // cont. 'draw' of data
   // todo return to this, see
@@ -190,25 +191,29 @@ function draw() {
     // var peaks = peakDetect.update(spectrum);
     // can't give spectrum to peakDetect.update, seems it needs the fft object
     // The update method is run in the draw loop.
-// Accepts an FFT object. You must call .analyze() on the FFT object prior to updating the peakDetect because it relies on a completed FFT analysis.
+    // Accepts an FFT object. You must call .analyze() on the FFT object prior to updating the peakDetect because it relies on a completed FFT analysis.
     peakDetect.update(fft);
 
-//     // if (peakDetect.isDetected) drawSingleLetterCandidateWave(waveform, amp);
+
     var ellipseWidth = 10;
     if ( peakDetect.isDetected ) {
-      console.log("Peak detected!");
+      reset();
+      let energy = fft.getEnergy(peakDetect.f1, peakDetect.f2);
+      console.log('Current energy:', energy);
+
       ellipseWidth = 50;
       drawSingleLetterCandidate(waveform);
     } else {
-      ellipseWidth = 1;
+      ellipseWidth = 10;
+      
     }
   
-    ellipse(width/2, height/2, ellipseWidth, ellipseWidth);
+    // ellipse(width/2, height/2, ellipseWidth, ellipseWidth);
 
     // future look into onPeak
 // onPeak accepts two arguments: a function to call when a peak is detected. The value of the peak, between 0.0 and 1.0, is passed to the callback.
 
-
+    
   }
 
 
