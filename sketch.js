@@ -87,7 +87,7 @@ function setup() {
   let freq1 = 1; // low frequency
   let freq2 = 200; // high frequency
   let threshold = 0; // threshold for detecting a beat, between 0 and 1 (usually start with 0.15)
-  let framesPerPeak = 1; // number of frames to wait before detecting another peak (helps avoid double-detects)
+  let framesPerPeak = 2; // number of frames to wait before detecting another peak (helps avoid double-detects)
   peakDetect = new p5.PeakDetect(freq1,freq2,threshold,framesPerPeak);
 
   
@@ -187,6 +187,12 @@ function draw() {
     // TODO urgent for debug at night:
     // 1. allow internal music mode, not mic
 
+//     let bass = fft.getEnergy(20, 250);       // low
+// let mids = fft.getEnergy(250, 2000);     // voice
+// let highs = fft.getEnergy(2000, 10000);  // sibilance / noise
+// console.log(`Bass: ${bass}  Mids: ${mids}  Highs: ${highs}`);
+
+
 
     // var peaks = peakDetect.update(spectrum);
     // can't give spectrum to peakDetect.update, seems it needs the fft object
@@ -197,11 +203,14 @@ function draw() {
 
     var ellipseWidth = 10;
     if ( peakDetect.isDetected ) {
+      // future decide better band of frequency...
       reset();
       let energy = fft.getEnergy(peakDetect.f1, peakDetect.f2);
       console.log('Current energy:', energy);
+      console.log('energy:', peakDetect.energy, 'cutoff:', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
 
       ellipseWidth = 50;
+      // TODO amp for circle
       drawSingleLetterCandidate(waveform);
     } else {
       ellipseWidth = 10;

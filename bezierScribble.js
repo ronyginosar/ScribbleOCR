@@ -59,7 +59,7 @@ function drawSingleLetterCandidateWave(waveform, amp) {
     }
   }
 
-function drawControllerPoints(x,y,amp)
+function drawControllerPoints(x,y,amp=10)
 {
   push();
   strokeWeight(1);
