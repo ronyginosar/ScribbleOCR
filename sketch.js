@@ -28,6 +28,8 @@ let ampAmplification = 1000;
 var fft;
 let amp;
 
+let PRMODE = false; // for debug
+
 
 
 let lng = "heb";
@@ -39,7 +41,9 @@ function preload() {
 }
 
 function setup() {
-  pixelDensity(10); // TODO if pr mode
+  if (PRMODE) {
+    pixelDensity(10);
+  }
   
   textFont("IBM Plex Sans Hebrew"); // from google fonts
   
@@ -145,7 +149,7 @@ function draw() {
 
   // drawSingleLetterCandidate();
 
-  if (micEnabled){
+  if (micEnabled && !PRMODE) {
 
     // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
     var level = mic.getLevel();
@@ -175,31 +179,31 @@ function draw() {
 
     // drawWaveform(waveform);
 
+    // // constantly draw the scribble, according to draw frame rate
     // drawSingleLetterCandidate(waveform);
 
 
     // TODO urgent for debug at night:
     // 1. allow internal music mode, not mic
-    // 2. allow mode for pr high res export
 
 
-//     // var peaks = peakDetect.update(spectrum);
-//     // can't give spectrum to peakDetect.update, seems it needs the fft object
-//     // The update method is run in the draw loop.
-// // Accepts an FFT object. You must call .analyze() on the FFT object prior to updating the peakDetect because it relies on a completed FFT analysis.
-//     peakDetect.update(fft);
+    // var peaks = peakDetect.update(spectrum);
+    // can't give spectrum to peakDetect.update, seems it needs the fft object
+    // The update method is run in the draw loop.
+// Accepts an FFT object. You must call .analyze() on the FFT object prior to updating the peakDetect because it relies on a completed FFT analysis.
+    peakDetect.update(fft);
 
 //     // if (peakDetect.isDetected) drawSingleLetterCandidateWave(waveform, amp);
-//     var ellipseWidth = 10;
-//     if ( peakDetect.isDetected ) {
-//       console.log("Peak detected!");
-//       ellipseWidth = 50;
-//       drawSingleLetterCandidate(waveform);
-//     } else {
-//       ellipseWidth *= 1;
-//     }
+    var ellipseWidth = 10;
+    if ( peakDetect.isDetected ) {
+      console.log("Peak detected!");
+      ellipseWidth = 50;
+      drawSingleLetterCandidate(waveform);
+    } else {
+      ellipseWidth = 1;
+    }
   
-//     ellipse(width/2, height/2, ellipseWidth, ellipseWidth);
+    ellipse(width/2, height/2, ellipseWidth, ellipseWidth);
 
     // future look into onPeak
 // onPeak accepts two arguments: a function to call when a peak is detected. The value of the peak, between 0.0 and 1.0, is passed to the callback.
@@ -207,13 +211,6 @@ function draw() {
 
   }
 
-  // var PRMODE = true;
-  // if (PRMODE){
-  //   if (mousePressed){
-  //     drawSingleLetterCandidate(10);
-  //     noLoop();
-  //   }
-  // }
 
 
 
@@ -225,9 +222,14 @@ function doubleClicked() {
   // drawSingleLetterCandidate(10);
   // drawSingleLetterCandidate(0);
   // reset();
-  canvas.background(backgroundcolor);
-  drawSingleLetterPR();
-  noLoop();
+  if (PRMODE) {
+    canvas.background(backgroundcolor);
+    drawSingleLetterPR();
+    noLoop();
+  }
+  else {
+    console.log("Double clicked, not in PRMODE");
+  }
 }
 
 function reset() {

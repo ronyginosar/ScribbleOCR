@@ -33,12 +33,13 @@ function drawSingleLetterPR() { // TODO rename this, it's not the single... it d
       // draw single letters around the i,j of the matrix
       data_spread_per_scribble = 1.5;
       // max_data_points_per_scribble = floor(random(30, 50)); // random number of points per scribble
-      // max_data_points_per_scribble = floor(random(50, 70)); // random number of points per scribble
-      max_data_points_per_scribble = floor(random(70, 100)); // random number of points per scribble
-      console.log("max_data_points_per_scribble: " + max_data_points_per_scribble);
+      max_data_points_per_scribble = floor(random(50, 70)); // random number of points per scribble
+      // max_data_points_per_scribble = floor(random(70, 100)); // random number of points per scribble
+      // max_data_points_per_scribble = 50; // random number of points per scribble
+      console.log("PRMODE - max_data_points_per_scribble: " + max_data_points_per_scribble);
       // singleLetterCandidate(i, j, 0, 20);
-      // singleLetterCandidate(i, j, 0, 15);
-      singleLetterCandidate(i, j, 0, 5);
+      singleLetterCandidate(i, j, 0, 15);
+      // singleLetterCandidate(i, j, 0, 5);
     }
   }
 }
