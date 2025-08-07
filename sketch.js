@@ -64,7 +64,7 @@ function setup() {
   // [freq1], [freq2], [threshold], [framesPerPeak]
   // frequency range in Hz (e.g., 100, 1000 for voice)
   // NOTE: TUNE THIS PER MUSIC
-  let freq1 = 100; // low frequency
+  let freq1 = 10; // low frequency
   let freq2 = 2000; // high frequency
   let threshold = 0; // threshold for detecting a beat, between 0 and 1 (usually start with 0.15, is logarithmic)
   let framesPerPeak = 10; // number of frames to wait before detecting another peak (helps avoid double-detects)
@@ -149,15 +149,13 @@ function draw() {
       console.log('Current energy:', energy);
       console.log('energy:', peakDetect.energy, 'cutoff(peak detection threshold):', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
 
-      console.log("DEBUG draw amp: " + ampLevel);
+      // console.log("DEBUG draw amp: " + ampLevel);
 
       // waveform controls the shape, amp controls the size of the control points
       drawLetterCandidates_waveform_n_amp(waveform,ampLevel);
     } 
     // else {
-      
     // }
-  
 
     // future look into onPeak
     // onPeak accepts two arguments: a function to call when a peak is detected. The value of the peak, between 0.0 and 1.0, is passed to the callback.
@@ -186,7 +184,8 @@ function toggleMic() {
         console.log("Mic OFF");
         audio.stop();
 
-        // fft.setInput(); // reset to default?
+        // reset to default?
+        // fft.setInput(); 
         // amp.setInput();
   
     }
@@ -211,9 +210,10 @@ function toggleInternalAudio() {
     } else {
       // console.log("BUTTON Stopping internal audio mode");
       // audiofile.stop();
-      audiofile.pause(); // to continue from where we left off
-      // future make this a toggle
-      // fft.setInput(); // reset to default?
+      audiofile.pause(); // to continue from where we left off // future make this a toggle
+      
+      // reset to default?
+      // fft.setInput(); 
       // amp.setInput();
 
     }
