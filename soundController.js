@@ -23,8 +23,6 @@ class SoundController {
     }
   }
 
-<<<<<<< HEAD
-=======
   // update() {
   //   if (!this.enabled) return;
   //   this.level = this.amp.getLevel();
@@ -59,7 +57,6 @@ class SoundController {
     console.log("mode:", mode);
     return mode;
   }
->>>>>>> origin/master
 
   update() {
     if (!this.enabled) return;
