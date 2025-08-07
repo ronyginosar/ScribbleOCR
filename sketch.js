@@ -11,15 +11,17 @@ var audio;
 let micEnabled = false;
 var fft;
 let amp;
+let audiofile; // for internal audio mode
 // end section
 
 let PRMODE = false; // for debug
 let INTERNALAUDIOMODE = false; // for debug
 
 function preload(){
-  if(INTERNALAUDIOMODE) {
+  // if(INTERNALAUDIOMODE) {
+  // load anyway to use....
     audiofile = loadSound('/assets/Alto_score_simulation-for-rony_5th-movement.wav');
-  }
+  // }
 }
 
 
@@ -34,13 +36,15 @@ function setup() {
   // ui
   btnMic = createButton("Mic ON/OFF");
   btnExport = createButton("Export");
+  btnInternalAudio = createButton("Internal Audio");
 
   btnExport.mousePressed(() => { 
     saveCanvas('scribble.png'); 
   });
 
-  // toggle mic on/off
+  // toggle inputs
   btnMic.mousePressed(toggleMic);
+  btnInternalAudio.mousePressed(toggleInternalAudio);
   
   // future: put this in soundController
   // https://js6450.github.io/sound-p5-part1.html
@@ -48,12 +52,17 @@ function setup() {
   
   //////////////////////////////// TODO urgent for debug at night: //////////////////////
     // allow internal music mode, not mic
-  if (INTERNALAUDIOMODE) {
-    audio = new p5.AudioIn();
-    audio.setSource(audiofile); // TODO - how to?
-  } else {
-    audio = new p5.AudioIn();
-  }
+    
+
+  // if (INTERNALAUDIOMODE) {
+  //   audio = new p5.AudioIn();
+  //   console.log("SETUP Using internal audio mode with audio file: " + audiofile);
+  //   audio.setSource(audiofile); // TODO - how to?
+  // } else {
+  //   audio = new p5.AudioIn();
+  // }
+
+  audio = new p5.AudioIn();
   fft = new p5.FFT();
   amp = new p5.Amplitude();
 
@@ -83,7 +92,7 @@ function draw() {
   //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
   // }
 
-  if (micEnabled && !PRMODE) {
+  if ((micEnabled || INTERNALAUDIOMODE) && !PRMODE) {
 
     // AMPLITUDE
     // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
@@ -113,11 +122,13 @@ function draw() {
 
 
     // PEAK DETECTION
-          // for DEBUG
-          // let bass = fft.getEnergy(20, 250);       // low
-          // let mids = fft.getEnergy(250, 2000);     // voice
-          // let highs = fft.getEnergy(2000, 10000);  // sibilance / noise
-          // console.log(`Bass: ${bass}  Mids: ${mids}  Highs: ${highs}`);
+
+    // for DEBUG
+    // let bass = fft.getEnergy(20, 250);       // low
+    // let mids = fft.getEnergy(250, 2000);     // voice
+    // let highs = fft.getEnergy(2000, 10000);  // sibilance / noise
+    // console.log(`Bass: ${bass}  Mids: ${mids}  Highs: ${highs}`);
+
     // The update method is run in the draw loop.
     // Accepts an FFT object. You must call .analyze() on the FFT object prior to updating the peakDetect because it relies on a completed FFT analysis.
     peakDetect.update(fft);
@@ -167,14 +178,30 @@ function toggleMic() {
         console.log("Mic OFF");
         audio.stop();
   
-      }
-      else {
-        console.log("Mic ON");
-        audio.start();
-  
-        fft.setInput(audio); //  set the input source for the FFT object to the mic
-        amp.setInput(audio);
-  
-      }
+    }
+    else {
+      console.log("Mic ON");
+      audio.start();
+
+      fft.setInput(audio); //  set the input source for the FFT object to the mic
+      amp.setInput(audio);
+
+    }
       micEnabled = !micEnabled;
+}
+
+function toggleInternalAudio() {
+  console.log("Toggling internal audio mode");
+    if (!INTERNALAUDIOMODE) {
+      console.log("BUTTON Using internal audio mode with audio file: " + audiofile);
+      audiofile.play();
+      // audio.setSource(audiofile); // TODO - how to?
+      fft.setInput(audiofile); //  set the input source for the FFT object to the mic
+      amp.setInput(audiofile);
+    } else {
+      console.log("BUTTON Stopping internal audio mode");
+      audiofile.stop();
+
+    }
+  INTERNALAUDIOMODE = !INTERNALAUDIOMODE;
 }
