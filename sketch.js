@@ -9,7 +9,6 @@ let soundVisualizerCanvas;
 // future: put this in soundController
 var audio;
 let micEnabled = false;
-let ampAmplification = 1000;
 var fft;
 let amp;
 // end section
@@ -115,10 +114,10 @@ function draw() {
 
     // PEAK DETECTION
           // for DEBUG
-          let bass = fft.getEnergy(20, 250);       // low
-          let mids = fft.getEnergy(250, 2000);     // voice
-          let highs = fft.getEnergy(2000, 10000);  // sibilance / noise
-          console.log(`Bass: ${bass}  Mids: ${mids}  Highs: ${highs}`);
+          // let bass = fft.getEnergy(20, 250);       // low
+          // let mids = fft.getEnergy(250, 2000);     // voice
+          // let highs = fft.getEnergy(2000, 10000);  // sibilance / noise
+          // console.log(`Bass: ${bass}  Mids: ${mids}  Highs: ${highs}`);
     // The update method is run in the draw loop.
     // Accepts an FFT object. You must call .analyze() on the FFT object prior to updating the peakDetect because it relies on a completed FFT analysis.
     peakDetect.update(fft);

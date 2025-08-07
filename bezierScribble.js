@@ -2,25 +2,29 @@
 
 let scribble_spacing, k, numberOfScribbles;
 let waveformAmplification = 100; // how much to amplify the waveform. since we're drawing circles - we get an interesting pattern above value of 3
+let ampAmplification = 1000;
+
 
 let number_of_scribbles = 2; // min is 2, not exactly "number"...
 let max_data_points_per_scribble = 10;
 let data_spread_per_scribble = 2; // higher is narrower (smaller letter)
 let constrain_scribble_range = 50;
 
-// draws a matrix of letters from amplitude
-function drawLetterCandidates_amp(amp) { // TODO rename this, it's not the single... it draws a matrix
-  noFill();
-  stroke("#282828");
-  scribble_spacing = min(width, height) / number_of_scribbles;
-  for (let i = 0 + scribble_spacing; i <= width - scribble_spacing; i += scribble_spacing) {
-    for (let j = 0 + scribble_spacing; j <= height - scribble_spacing; j += scribble_spacing) {
-      // draw single letters around the i,j of the matrix
-      singleLetterCandidate_amp(i, j, amp);
-    }
-  }
+// draws a matrix of letters from amplitude - not updated
+function drawLetterCandidates_amp(amp) {
+  console.log("not updated")
+  // noFill();
+  // stroke("#282828");
+  // scribble_spacing = min(width, height) / number_of_scribbles;
+  // for (let i = 0 + scribble_spacing; i <= width - scribble_spacing; i += scribble_spacing) {
+  //   for (let j = 0 + scribble_spacing; j <= height - scribble_spacing; j += scribble_spacing) {
+  //     // draw single letters around the i,j of the matrix
+  //     singleLetterCandidate_amp(i, j, amp);
+  //   }
+  // }
 }
 
+// draws a matrix of letters from waveform and control points sized by amplitude
 function drawLetterCandidates_waveform_n_amp(waveform, amp) {
     noFill();
     stroke("#282828");
@@ -33,22 +37,24 @@ function drawLetterCandidates_waveform_n_amp(waveform, amp) {
     }
   }
 
+// random scribble - not updated  
 function singleLetterCandidate_amp(i, j, amp, strokeThickness = 5) {
-  strokeWeight(strokeThickness);
-  beginShape();
-  let scribble_range = scribble_spacing / data_spread_per_scribble;
-  for (let n = 0; n < max_data_points_per_scribble; n++) {
-    const x = random(-scribble_range, scribble_range) + i;
-    const y = random(-scribble_range, scribble_range) + j;
-    drawControllerPoints(x,y,amp);
-    // future: random between vertex and curve vertex?
-    // vertex(x, y);
-    curveVertex(x, y);
-  }
-  endShape();
+  console.log("not updated")
+  // strokeWeight(strokeThickness);
+  // beginShape();
+  // let scribble_range = scribble_spacing / data_spread_per_scribble;
+  // for (let n = 0; n < max_data_points_per_scribble; n++) {
+  //   const x = random(-scribble_range, scribble_range) + i;
+  //   const y = random(-scribble_range, scribble_range) + j;
+  //   drawControllerPoints(x,y,amp);
+  //   // future: random between vertex and curve vertex?
+  //   // vertex(x, y);
+  //   curveVertex(x, y);
+  // }
+  // endShape();
 }
 
-function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp) {
+function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp, useinternalAmp = false) {
   // sound waveform controls how far and in which direction each point of the scribble moves from its center. Loud sounds stretch the scribble outward, quiet sounds keep it tight.
   // TODO still need to solve the scale down, so that we can't draw outside the canvas
   strokeWeight(4);
@@ -59,10 +65,16 @@ function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp) {
 
   for (let n = 0; n < max_data_points_per_scribble; n++) {
     let index = n * spacing;
-    let amp = waveform[index]; // TODO TEMP
+    if (useinternalAmp){
+      // This gives a different shape to each control point
+      amp = waveform[index];
+    }
+    
+    // future
     // spectrum[index] gives an amplitude in dB-like scale, from 0 (silence) to 255 (max energy at that frequency bin).
     // To use it in the same logic that expects amp ∈ [-1, 1], we remap it.
-    // let amp = map(spectrum[index], 0, 255, -1, 1); // todo not enough to change this, need different logic
+    // let amp = map(spectrum[index], 0, 255, -1, 1); 
+    // --> this is not enough to change this, needs a different logic
 
     let carrierFreq = 0.03; // a "carrier frequency", the base frequency that you modulate, like "angleOffsetPerScribble"
     let angle = i * carrierFreq; // use i as a "seed" for variety across grid - o each scribble has a slightly different orientation or "twist"
@@ -71,7 +83,6 @@ function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp) {
     // Multiply direction × waveform value
     // → This scales the movement based on the sound.
     // Louder or more intense parts of the waveform stretch the scribble outward, and quieter parts pull it in.
-    
     let dx = sin(angle + n) * amp * waveformAmplification * scribble_spacing / 2;
     let dy = cos(angle + n) * amp * waveformAmplification * scribble_spacing / 2;
 
@@ -85,35 +96,31 @@ function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp) {
     x = constrain(x, 0+constrain_scribble_range, width-constrain_scribble_range);
     y = constrain(y, 0+constrain_scribble_range, height-constrain_scribble_range);
 
+    // future
     // Use a unique seed per scribble for noise variation
-  // let noiseSeedX = random(1000);
-  // let noiseSeedY = random(1000);
+    // let noiseSeedX = random(1000);
+    // let noiseSeedY = random(1000);
+    // let noiseOffsetX = map(noise(noiseSeedX + n * 0.1), 0, 1, -scribble_spacing / 4, scribble_spacing / 4);
+    // let noiseOffsetY = map(noise(noiseSeedY + n * 0.1), 0, 1, -scribble_spacing / 4, scribble_spacing / 4);  
+    // let x = i + dx + noiseOffsetX;
+    // let y = j + dy + noiseOffsetY;
 
-  //   let noiseOffsetX = map(noise(noiseSeedX + n * 0.1), 0, 1, -scribble_spacing / 4, scribble_spacing / 4);
-  //   let noiseOffsetY = map(noise(noiseSeedY + n * 0.1), 0, 1, -scribble_spacing / 4, scribble_spacing / 4);
-
-  //   let x = i + dx + noiseOffsetX;
-  //   let y = j + dy + noiseOffsetY;
-
-  // TODO add more noise for more variation
-  // go back to noise and use: https://p5js.org/reference/p5/noiseDetail/
-  //https://p5js.org/reference/p5/randomGaussian/
-  // or 2d? https://p5js.org/reference/p5/noise/
-
-    // optional debug circles:
-    // push(); fill("red"); noStroke(); circle(x, y, 3); pop();
-    drawControllerPoints(x,y,amp*ampAmplification); // TODO generalize
+    // future add more noise for more variation
+    // go back to noise and use: https://p5js.org/reference/p5/noiseDetail/
+    //https://p5js.org/reference/p5/randomGaussian/
+    // or 2d? https://p5js.org/reference/p5/noise/
 
     curveVertex(x, y);
+    drawControllerPoints(x,y,amp);
   }
-
   endShape();
 }
 
 // helper
 function drawControllerPoints(x,y,amp=10)
 {
-  // future emphasis: like dots in fonts?
+  // future emphasis location: like dots in fonts?
+
   // uses amp for controller point size:
   // using getLevel() inside the draw() function, which returns the volume of a sound at the given time of each frame
   push();
@@ -121,7 +128,7 @@ function drawControllerPoints(x,y,amp=10)
   // stroke("red");
   noStroke();
   fill("red");
-  circle(x, y, amp);
+  circle(x, y, amp*ampAmplification);
   pop();
 }
 
