@@ -7,6 +7,7 @@ class SoundController {
     this.level = 0;
     this.visualY = [];
     this.enabled = false;
+    this.fft = new p5.FFT();
   }
 
   toggleMic() {
@@ -22,6 +23,8 @@ class SoundController {
     }
   }
 
+<<<<<<< HEAD
+=======
   // update() {
   //   if (!this.enabled) return;
   //   this.level = this.amp.getLevel();
@@ -56,17 +59,10 @@ class SoundController {
     console.log("mode:", mode);
     return mode;
   }
+>>>>>>> origin/master
 
   update() {
     if (!this.enabled) return;
-    // // console.log("Updating sound controller...");
-    // let raw = this.amp.getLevel();
-    // this.level = lerp(this.level, raw, 0.1); // Smooth the volume
-  
-    // this.visualY.push(this.level);
-    // if (this.visualY.length > 300) {
-    //   this.visualY.shift();
-    // }
 
     let raw = this.amp.getLevel();
     this.level = lerp(this.level, raw, 0.1);
@@ -81,9 +77,6 @@ class SoundController {
   }
   
   drawVisualizer(graphicsCanvas) {
-    // graphicsCanvas.background(0, 0); // ensures old trails are erased
-    // graphicsCanvas.background(backgroundcolor);
-
     graphicsCanvas.stroke("green");
     graphicsCanvas.strokeWeight(1);
     graphicsCanvas.noFill();    
@@ -97,4 +90,16 @@ class SoundController {
   
     graphicsCanvas.endShape();
   }
+
+  getSoundData() {
+    const fft = this.fft.analyze();
+    return {
+      amplitude: this.level,
+      centroid: this.fft.getCentroid(),
+      bass: this.fft.getEnergy("bass"),
+      mid: this.fft.getEnergy("mid"),
+      phase: frameCount * 0.05,
+    };
+  }
+  
 }
