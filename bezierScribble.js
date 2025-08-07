@@ -132,7 +132,17 @@ function drawControllerPoints(x,y,amp=10)
   // stroke("red");
   noStroke();
   fill("red");
+  let tempamp;
+  if (!INTERNALAUDIOMODE) 
+    {
+      tempamp = ampAmplification;
+      ampAmplification=1000; // TODO place in toggle
+    }
   circle(x, y, amp*ampAmplification);
+  if (!INTERNALAUDIOMODE)
+    {
+      ampAmplification=tempamp; // TODO place in toggle
+    }
   pop();
 }
 

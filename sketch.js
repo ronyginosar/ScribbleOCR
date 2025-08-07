@@ -16,6 +16,7 @@ let audiofile; // for internal audio mode
 
 let PRMODE = false; // for debug
 let INTERNALAUDIOMODE = false; // for debug
+// future make mic and internal mutex
 
 
 // URGENT:
@@ -149,7 +150,8 @@ function draw() {
       console.log('Current energy:', energy);
       console.log('energy:', peakDetect.energy, 'cutoff(peak detection threshold):', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
 
-      // console.log("DEBUG draw amp: " + ampLevel);
+      // TODO FIX THE AMP UPON SWITCH after INTERNAL
+      console.log("DEBUG draw amp: " + ampLevel);
 
       // waveform controls the shape, amp controls the size of the control points
       drawLetterCandidates_waveform_n_amp(waveform,ampLevel);
@@ -201,6 +203,7 @@ function toggleMic() {
 }
 
 function toggleInternalAudio() {
+  // TODO FIX THE AMP UPON SWITCH after INTERNAL
   console.log("Toggling internal audio mode");
     if (!INTERNALAUDIOMODE) {
       // console.log("BUTTON Using internal audio mode with audio file: " + audiofile);
@@ -213,8 +216,8 @@ function toggleInternalAudio() {
       audiofile.pause(); // to continue from where we left off // future make this a toggle
       
       // reset to default?
-      // fft.setInput(); 
-      // amp.setInput();
+      fft.setInput(); 
+      amp.setInput();
 
     }
   INTERNALAUDIOMODE = !INTERNALAUDIOMODE;
