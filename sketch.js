@@ -6,20 +6,31 @@ let dataText;
 let soundVisualizerCanvas;
 // let soundController; // our central sound input manager
 
-// TEMP this should be separate 
-var mic;
+// future: put this in soundController
+var audio;
 let micEnabled = false;
 let ampAmplification = 1000;
 var fft;
 let amp;
+// end section
 
 let PRMODE = false; // for debug
+let INTERNALAUDIOMODE = false; // for debug
+
+function preload(){
+  if(INTERNALAUDIOMODE) {
+    audiofile = loadSound('/assets/Alto_score_simulation-for-rony_5th-movement.wav');
+  }
+}
 
 
 function setup() {
   if (PRMODE) {
     pixelDensity(10);
   }
+
+  canvas = createCanvas(300, 300);
+  reset();
     
   // ui
   btnMic = createButton("Mic ON/OFF");
@@ -28,55 +39,58 @@ function setup() {
   btnExport.mousePressed(() => { 
     saveCanvas('scribble.png'); 
   });
+
+  // toggle mic on/off
+  btnMic.mousePressed(toggleMic);
   
-  // TEMP
+  // future: put this in soundController
   // https://js6450.github.io/sound-p5-part1.html
   // The getLevel() function will return a number between 0 (silence) and 1 (maximum volume microphone can detect)
-  mic = new p5.AudioIn();
+  
+  //////////////////////////////// TODO urgent for debug at night: //////////////////////
+    // allow internal music mode, not mic
+  if (INTERNALAUDIOMODE) {
+    audio = new p5.AudioIn();
+    audio.setSource(audiofile); // TODO - how to?
+  } else {
+    audio = new p5.AudioIn();
+  }
   fft = new p5.FFT();
   amp = new p5.Amplitude();
 
   // https://editor.p5js.org/MGOBRIAL/sketches/zxLypkBKZ
   // [freq1], [freq2], [threshold], [framesPerPeak]
   // frequency range in Hz (e.g., 100, 1000 for voice)
-  let freq1 = 1; // low frequency
-  let freq2 = 200; // high frequency
+  // NOTE: TUNE THIS PER MUSIC
+  let freq1 = 100; // low frequency
+  let freq2 = 2000; // high frequency
   let threshold = 0; // threshold for detecting a beat, between 0 and 1 (usually start with 0.15, is logarithmic)
-  let framesPerPeak = 2; // number of frames to wait before detecting another peak (helps avoid double-detects)
+  let framesPerPeak = 10; // number of frames to wait before detecting another peak (helps avoid double-detects)
   peakDetect = new p5.PeakDetect(freq1,freq2,threshold,framesPerPeak);
 
-  // toggle mic on/off
-  btnMic.mousePressed(toggleMic);
-  canvas = createCanvas(300, 300);
-  reset();
 }
 
 function draw() {
-  // reset();
-  frameRate(5); // 10 fps
+
   // cont. 'draw' of data
   // todo return to this, see
   // https://p5js.org/examples/advanced-canvas-rendering-create-graphics/
   // https://editor.p5js.org/Lark/sketches/XZP9GFYqs
 
+  // future: return to this
   // if (soundController) {
-    // soundController.update(); 
+  //   soundController.update(); 
   //   soundController.drawVisualizer(soundVisualizerCanvas); // draw new visual
   //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
   // }
 
-  // drawSingleLetterCandidate();
-
   if (micEnabled && !PRMODE) {
 
+    // AMPLITUDE
     // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
-    var level = mic.getLevel();
+    var ampLevel = audio.getLevel();
     // console.log("Mic level: " + level.toPrecision(2));
     // console.log("AMP : " + amp.getLevel()); // same as direct mic
-    
-    // TEMP
-    // todo value if mic is enabled
-    // ellipse(width / 2, height / 2, level * 5000, level * 5000);
 
 
     //FFT (Fast Fourier Transform) is an analysis algorithm that isolates individual audio frequencies within a waveform. The p5.FFT object can return two types of data in arrays via two different functions: waveform() and analyze()
@@ -89,63 +103,47 @@ function draw() {
     fft.analyze();
 
     // let us amplify the amplitude data
-    // drawSingleLetterCandidate(level*ampAmplification);
-    // drawSingleLetterCandidateWave(waveform, amp);
-
-    // background(0, 30);
-        // fill(255);
+    // drawSingleLetterCandidate(ampLevel*ampAmplification);
+    // drawSingleLetterCandidateWave(waveform, ampLevel);
 
     // drawWaveform(waveform);
 
-    // // constantly draw the scribble, according to draw frame rate
+    // constantly draw the scribble, according to draw frame rate
     // drawSingleLetterCandidate(waveform);
 
 
-    // TODO urgent for debug at night:
-    // 1. allow internal music mode, not mic
 
-//     let bass = fft.getEnergy(20, 250);       // low
-// let mids = fft.getEnergy(250, 2000);     // voice
-// let highs = fft.getEnergy(2000, 10000);  // sibilance / noise
-// console.log(`Bass: ${bass}  Mids: ${mids}  Highs: ${highs}`);
-
-
-
-    // var peaks = peakDetect.update(spectrum);
-    // can't give spectrum to peakDetect.update, seems it needs the fft object
+    // PEAK DETECTION
+          // for DEBUG
+          let bass = fft.getEnergy(20, 250);       // low
+          let mids = fft.getEnergy(250, 2000);     // voice
+          let highs = fft.getEnergy(2000, 10000);  // sibilance / noise
+          console.log(`Bass: ${bass}  Mids: ${mids}  Highs: ${highs}`);
     // The update method is run in the draw loop.
     // Accepts an FFT object. You must call .analyze() on the FFT object prior to updating the peakDetect because it relies on a completed FFT analysis.
     peakDetect.update(fft);
 
-
-    var ellipseWidth = 10;
+    // console.log('Current energy:', peakDetect.energy);
+    // console.log('Current energy:', fft.getEnergy(peakDetect.f1, peakDetect.f2));
     if ( peakDetect.isDetected ) {
       // future decide better band of frequency...
-      reset();
+  
+      reset(); // clean canvas upon peak detection
       let energy = fft.getEnergy(peakDetect.f1, peakDetect.f2);
       console.log('Current energy:', energy);
-      console.log('energy:', peakDetect.energy, 'cutoff:', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
+      console.log('energy:', peakDetect.energy, 'cutoff(peak detection threshold):', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
 
-      ellipseWidth = 50;
-      // TODO amp for circle
-      drawSingleLetterCandidate(waveform);
-    } else {
-      ellipseWidth = 10;
+      // waveform controls the shape, amp controls the size of the control points
+      drawLetterCandidates_waveform_n_amp(waveform,ampLevel);
+    } 
+    // else {
       
-    }
+    // }
   
-    // ellipse(width/2, height/2, ellipseWidth, ellipseWidth);
 
     // future look into onPeak
-// onPeak accepts two arguments: a function to call when a peak is detected. The value of the peak, between 0.0 and 1.0, is passed to the callback.
-
-    
+    // onPeak accepts two arguments: a function to call when a peak is detected. The value of the peak, between 0.0 and 1.0, is passed to the callback.
   }
-
-
-
-
-
 }
 
 function doubleClicked() {
@@ -168,15 +166,15 @@ function toggleMic() {
     // toggle mic on/off 
     if (micEnabled) {
         console.log("Mic OFF");
-        mic.stop();
+        audio.stop();
   
       }
       else {
         console.log("Mic ON");
-        mic.start();
+        audio.start();
   
-        fft.setInput(mic); //  set the input source for the FFT object to the mic
-        amp.setInput(mic);
+        fft.setInput(audio); //  set the input source for the FFT object to the mic
+        amp.setInput(audio);
   
       }
       micEnabled = !micEnabled;
