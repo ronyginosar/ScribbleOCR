@@ -17,9 +17,13 @@ let audiofile; // for internal audio mode
 let PRMODE = false; // for debug
 let INTERNALAUDIOMODE = false; // for debug
 
+
+// URGENT:
+// is the internal audio mode working properly? connect and disconnect inc?
+
 function preload(){
   // if(INTERNALAUDIOMODE) {
-  // load anyway to use....
+  // load anyway to use.... otherwise need a flag and not toggle
     audiofile = loadSound('/assets/Alto_score_simulation-for-rony_5th-movement.wav');
   // }
 }
@@ -49,20 +53,10 @@ function setup() {
   // future: put this in soundController
   // https://js6450.github.io/sound-p5-part1.html
   // The getLevel() function will return a number between 0 (silence) and 1 (maximum volume microphone can detect)
-  
-  //////////////////////////////// TODO urgent for debug at night: //////////////////////
-    // allow internal music mode, not mic
-    
 
-  // if (INTERNALAUDIOMODE) {
-  //   audio = new p5.AudioIn();
-  //   console.log("SETUP Using internal audio mode with audio file: " + audiofile);
-  //   audio.setSource(audiofile); // TODO - how to?
-  // } else {
-  //   audio = new p5.AudioIn();
-  // }
 
-  audio = new p5.AudioIn();
+
+  audio = new p5.AudioIn(); // init as mic, later we can switch to audiofile
   fft = new p5.FFT();
   amp = new p5.Amplitude();
 
@@ -80,6 +74,11 @@ function setup() {
 
 function draw() {
 
+  // test
+  // if (INTERNALAUDIOMODE) {
+    // audio = audiofile;
+  // }
+
   // cont. 'draw' of data
   // todo return to this, see
   // https://p5js.org/examples/advanced-canvas-rendering-create-graphics/
@@ -96,9 +95,16 @@ function draw() {
 
     // AMPLITUDE
     // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
-    var ampLevel = audio.getLevel();
-    // console.log("Mic level: " + level.toPrecision(2));
+    // var audio.getLevel();
+    // console.log("Mic level: " + ampLevel.toPrecision(2));
     // console.log("AMP : " + amp.getLevel()); // same as direct mic
+
+    // we "init" twice this ampLevel, it seems they are different objects and need to run one over the other
+    if (INTERNALAUDIOMODE) {
+      var ampLevel = amp.getLevel(); // get the level of the audio file
+    } else {
+      var ampLevel = audio.getLevel(); // get the level of the mic input
+    }
 
 
     //FFT (Fast Fourier Transform) is an analysis algorithm that isolates individual audio frequencies within a waveform. The p5.FFT object can return two types of data in arrays via two different functions: waveform() and analyze()
@@ -143,6 +149,8 @@ function draw() {
       console.log('Current energy:', energy);
       console.log('energy:', peakDetect.energy, 'cutoff(peak detection threshold):', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
 
+      console.log("DEBUG draw amp: " + ampLevel);
+
       // waveform controls the shape, amp controls the size of the control points
       drawLetterCandidates_waveform_n_amp(waveform,ampLevel);
     } 
@@ -177,6 +185,9 @@ function toggleMic() {
     if (micEnabled) {
         console.log("Mic OFF");
         audio.stop();
+
+        // fft.setInput(); // reset to default?
+        // amp.setInput();
   
     }
     else {
@@ -193,14 +204,17 @@ function toggleMic() {
 function toggleInternalAudio() {
   console.log("Toggling internal audio mode");
     if (!INTERNALAUDIOMODE) {
-      console.log("BUTTON Using internal audio mode with audio file: " + audiofile);
+      // console.log("BUTTON Using internal audio mode with audio file: " + audiofile);
       audiofile.play();
-      // audio.setSource(audiofile); // TODO - how to?
       fft.setInput(audiofile); //  set the input source for the FFT object to the mic
       amp.setInput(audiofile);
     } else {
-      console.log("BUTTON Stopping internal audio mode");
-      audiofile.stop();
+      // console.log("BUTTON Stopping internal audio mode");
+      // audiofile.stop();
+      audiofile.pause(); // to continue from where we left off
+      // future make this a toggle
+      // fft.setInput(); // reset to default?
+      // amp.setInput();
 
     }
   INTERNALAUDIOMODE = !INTERNALAUDIOMODE;

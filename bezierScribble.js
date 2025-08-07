@@ -32,6 +32,8 @@ function drawLetterCandidates_waveform_n_amp(waveform, amp) {
     for (let i = 0 + scribble_spacing; i <= width - scribble_spacing; i += scribble_spacing) {
       for (let j = 0 + scribble_spacing; j <= height - scribble_spacing; j += scribble_spacing) {
         // draw single letters around the i,j of the matrix
+        // console.log("DEBUG drawLetterCandidates_waveform_n_amp amp: " + amp);
+
         singleLetterCandidate_waveform_n_amp(i, j, waveform, amp);
       }
     }
@@ -54,7 +56,7 @@ function singleLetterCandidate_amp(i, j, amp, strokeThickness = 5) {
   // endShape();
 }
 
-function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp, useinternalAmp = false) {
+function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp, useinternalAmp=false) {
   // sound waveform controls how far and in which direction each point of the scribble moves from its center. Loud sounds stretch the scribble outward, quiet sounds keep it tight.
   // TODO still need to solve the scale down, so that we can't draw outside the canvas
   strokeWeight(4);
@@ -111,6 +113,7 @@ function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp, useinternalAm
     // or 2d? https://p5js.org/reference/p5/noise/
 
     curveVertex(x, y);
+    // console.log("DEBUG singleLetterCandidate_waveform_n_amp amp: " + amp);
     drawControllerPoints(x,y,amp);
   }
   endShape();
