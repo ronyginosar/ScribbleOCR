@@ -27,7 +27,7 @@ let scribble_spacing;
 // note: if the scribble is too much of a circle - use a lower value
 let waveformAmplification = 5; 
 let ampAmplification = 100; //180;
-let extraSpacingInbetween = 10;
+let extraSpacingInbetween = 0;
 let scribbleStrokeWeight = 3;
 let number_of_scribbles = 2; // min is 2, not exactly "number"...
 let max_data_points_per_scribble = 10;
@@ -116,6 +116,24 @@ function draw() {
       number_of_scribbles +=1 ;
     }
 
+    let FIVE_SECONDS = 60*5;
+    let TEN_SECONDS = 60*10;
+
+    // // descending order for ifs
+    // TODO this needs to be based on peak detection as well
+    // if (frameCount >= TEN_SECONDS) { 
+    //   console.log("ADDING data points per scribble");
+    //   if (frameCount % 60 == 0) { // every second
+    //     max_data_points_per_scribble *= 2 ;
+    //   }
+    // } else if(frameCount >= FIVE_SECONDS){
+    //   console.log("Reducing data points per scribble");
+    //   if (frameCount % 60 == 0) { // every second
+    //     max_data_points_per_scribble /= 2 ;
+    //   }
+    // }
+    
+
     // AMPLITUDE
     // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
     // var audio.getLevel();
@@ -165,15 +183,26 @@ function draw() {
     // console.log('Current energy:', peakDetect.energy);
     // console.log('Current energy:', fft.getEnergy(peakDetect.f1, peakDetect.f2));
     if ( peakDetect.isDetected ) {
+      console.log('Peak');
       // future decide better band of frequency...
       if (DEBUG) {
         let energy = fft.getEnergy(peakDetect.f1, peakDetect.f2);
         console.log('Current FFT energy:', energy);
-        console.log('peakDetect energy:', peakDetect.energy, 'cutoff(peak detection threshold):', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
+        console.log('peakDetect energy:', peakDetect.energy, 'cutoff(peak detection threshold):', peakDetect.cutoff);
             
-        // TODO FIX THE AMP UPON SWITCH after INTERNAL
+        // TODO FIX: THE AMP UPON SWITCH after INTERNAL: if we try to use mic after internal it won't calc the amp properly
         console.log("DEBUG draw amp: " + ampLevel);
       }
+
+    
+    // TODO // after 2 minutes for example - start reducing the data points until we get just red dancing circles
+    // let ONE_MINUTES = 60*60*1
+    // let FIVE_SECONDS = 60*5;
+    // if (frameCount >= FIVE_SECONDS) { // every second
+    //   if (frameCount % 60 == 0) { // every second
+    //     max_data_points_per_scribble /= 10 ;
+    //   }
+    // }
 
       reset(); // clean canvas upon peak detection
       // waveform controls the shape, amp controls the size of the control points
