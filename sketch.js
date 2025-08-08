@@ -26,7 +26,7 @@ let scribble_spacing;
 // waveformAmplification: since we're drawing circles - we get an interesting pattern above value of 3
 // note: if the scribble is too much of a circle - use a lower value
 let waveformAmplification = 5; 
-let ampAmplification = 100; //180;
+let ampAmplification = 300;//180;
 let extraSpacingInbetween = 0;
 let scribbleStrokeWeight = 3;
 let number_of_scribbles = 2; // min is 2, not exactly "number"...
@@ -34,6 +34,12 @@ let max_data_points_per_scribble = 10;
 let data_spread_per_scribble = 2; // higher is narrower (smaller letter)
 let constrain_scribble_range = 50;
 /// end of PARAMS FOR SCRIBBLES
+
+
+// TIME SCALES FOR PARAM CHANGES
+let FIVE_SECONDS = 60*5;
+let TEN_SECONDS = 60*10;
+let TWO_MINUTES = 60*2*60; // 2 minutes
 
 
 // URGENT:
@@ -112,27 +118,15 @@ function draw() {
   if ((micEnabled || INTERNALAUDIOMODE) && !PRMODE) {
 
     // change scribble parameters based on play time
-    if (frameCount % 60 == 0) { // every second
-      number_of_scribbles +=1 ;
-    }
-
-    let FIVE_SECONDS = 60*5;
-    let TEN_SECONDS = 60*10;
-
-    // // descending order for ifs
-    // TODO this needs to be based on peak detection as well
-    // if (frameCount >= TEN_SECONDS) { 
-    //   console.log("ADDING data points per scribble");
-    //   if (frameCount % 60 == 0) { // every second
-    //     max_data_points_per_scribble *= 2 ;
-    //   }
-    // } else if(frameCount >= FIVE_SECONDS){
-    //   console.log("Reducing data points per scribble");
-    //   if (frameCount % 60 == 0) { // every second
-    //     max_data_points_per_scribble /= 2 ;
+    // // SITESPECIFIC make this longer
+    // // SITESPECIFIC we need much more time with single to understand it
+    // if (frameCount % 60 == 0) { // every second
+    //   if (number_of_scribbles < 100) {
+    //     console.log("Increasing number of scribbles: " + number_of_scribbles);
+    //     number_of_scribbles +=1 ;
     //   }
     // }
-    
+
 
     // AMPLITUDE
     // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
@@ -194,15 +188,23 @@ function draw() {
         console.log("DEBUG draw amp: " + ampLevel);
       }
 
-    
-    // TODO // after 2 minutes for example - start reducing the data points until we get just red dancing circles
-    // let ONE_MINUTES = 60*60*1
-    // let FIVE_SECONDS = 60*5;
-    // if (frameCount >= FIVE_SECONDS) { // every second
-    //   if (frameCount % 60 == 0) { // every second
-    //     max_data_points_per_scribble /= 10 ;
-    //   }
-    // }
+      // // SITESPECIFIC : adapt values, maybe more options
+      // // TODO needs a MAX/MIN VALUES
+      // // TODO logic function instead of mid code?
+      // if ((frameCount >= TEN_SECONDS)) { 
+      //   // if (frameCount % 60 == 0) { // every second
+      //   if (max_data_points_per_scribble < 50) { 
+      //     console.log("ADDING data points per scribble " + max_data_points_per_scribble);
+      //     max_data_points_per_scribble += 2 ;
+      //   }
+      // } else if((frameCount >= FIVE_SECONDS) ){
+      //   // start reducing the data points until we get just red dancing circles
+      //   // if (frameCount % 60 == 0) { // every second
+      //   if (max_data_points_per_scribble > 2) { 
+      //     max_data_points_per_scribble /= 2 ;
+      //     console.log("Reducing data points per scribble " + max_data_points_per_scribble);
+      //   }
+      // }
 
       reset(); // clean canvas upon peak detection
       // waveform controls the shape, amp controls the size of the control points
