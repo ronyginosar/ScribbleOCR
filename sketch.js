@@ -18,6 +18,23 @@ let PRMODE = false; // for debug
 let INTERNALAUDIOMODE = false; // for debug
 // future make mic and internal mutex
 
+let DEBUG = false; // for debug
+
+
+/// PARAMS FOR SCRIBBLES, controlled from the main sketch
+let scribble_spacing;
+// waveformAmplification: since we're drawing circles - we get an interesting pattern above value of 3
+// note: if the scribble is too much of a circle - use a lower value
+let waveformAmplification = 5; 
+let ampAmplification = 100; //180;
+let extraSpacingInbetween = 10;
+let scribbleStrokeWeight = 3;
+let number_of_scribbles = 2; // min is 2, not exactly "number"...
+let max_data_points_per_scribble = 10;
+let data_spread_per_scribble = 2; // higher is narrower (smaller letter)
+let constrain_scribble_range = 50;
+/// end of PARAMS FOR SCRIBBLES
+
 
 // URGENT:
 // is the internal audio mode working properly? connect and disconnect inc?
@@ -35,7 +52,7 @@ function setup() {
     pixelDensity(10);
   }
 
-  canvas = createCanvas(300, 300);
+  canvas = createCanvas(windowWidth, windowHeight-40);
   reset();
     
   // ui
@@ -94,6 +111,11 @@ function draw() {
 
   if ((micEnabled || INTERNALAUDIOMODE) && !PRMODE) {
 
+    // change scribble parameters based on play time
+    if (frameCount % 60 == 0) { // every second
+      number_of_scribbles +=1 ;
+    }
+
     // AMPLITUDE
     // p5.Amplitude object keeps track of the volume of a sound, and we can get this number, that ranges between 0 and 1, using the getLevel() function
     // var audio.getLevel();
@@ -127,14 +149,14 @@ function draw() {
     // drawSingleLetterCandidate(waveform);
 
 
-
     // PEAK DETECTION
 
-    // for DEBUG
+    if (DEBUG) {
     // let bass = fft.getEnergy(20, 250);       // low
     // let mids = fft.getEnergy(250, 2000);     // voice
     // let highs = fft.getEnergy(2000, 10000);  // sibilance / noise
     // console.log(`Bass: ${bass}  Mids: ${mids}  Highs: ${highs}`);
+    }
 
     // The update method is run in the draw loop.
     // Accepts an FFT object. You must call .analyze() on the FFT object prior to updating the peakDetect because it relies on a completed FFT analysis.
@@ -144,15 +166,16 @@ function draw() {
     // console.log('Current energy:', fft.getEnergy(peakDetect.f1, peakDetect.f2));
     if ( peakDetect.isDetected ) {
       // future decide better band of frequency...
-  
+      if (DEBUG) {
+        let energy = fft.getEnergy(peakDetect.f1, peakDetect.f2);
+        console.log('Current FFT energy:', energy);
+        console.log('peakDetect energy:', peakDetect.energy, 'cutoff(peak detection threshold):', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
+            
+        // TODO FIX THE AMP UPON SWITCH after INTERNAL
+        console.log("DEBUG draw amp: " + ampLevel);
+      }
+
       reset(); // clean canvas upon peak detection
-      let energy = fft.getEnergy(peakDetect.f1, peakDetect.f2);
-      console.log('Current energy:', energy);
-      console.log('energy:', peakDetect.energy, 'cutoff(peak detection threshold):', peakDetect.cutoff, 'detected:', peakDetect.isDetected);
-
-      // TODO FIX THE AMP UPON SWITCH after INTERNAL
-      console.log("DEBUG draw amp: " + ampLevel);
-
       // waveform controls the shape, amp controls the size of the control points
       drawLetterCandidates_waveform_n_amp(waveform,ampLevel);
     } 

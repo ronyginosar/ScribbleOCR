@@ -1,16 +1,5 @@
 // reference: https://openprocessing.org/sketch/1794772
 
-let scribble_spacing, k, numberOfScribbles;
-// how much to amplify the waveform. since we're drawing circles - we get an interesting pattern above value of 3
-// note: if the scribble is too much of a circle - use a lower value
-let waveformAmplification = 5; 
-let ampAmplification = 180;
-
-let number_of_scribbles = 2; // min is 2, not exactly "number"...
-let max_data_points_per_scribble = 10;
-let data_spread_per_scribble = 2; // higher is narrower (smaller letter)
-let constrain_scribble_range = 50;
-
 // draws a matrix of letters from amplitude - not updated
 function drawLetterCandidates_amp(amp) {
   console.log("not updated")
@@ -29,7 +18,7 @@ function drawLetterCandidates_amp(amp) {
 function drawLetterCandidates_waveform_n_amp(waveform, amp) {
     noFill();
     stroke("#282828");
-    scribble_spacing = min(width, height) / number_of_scribbles;
+    scribble_spacing = min(width, height) / number_of_scribbles + extraSpacingInbetween;
     for (let i = 0 + scribble_spacing; i <= width - scribble_spacing; i += scribble_spacing) {
       for (let j = 0 + scribble_spacing; j <= height - scribble_spacing; j += scribble_spacing) {
         // draw single letters around the i,j of the matrix
@@ -60,7 +49,7 @@ function singleLetterCandidate_amp(i, j, amp, strokeThickness = 5) {
 function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp, useinternalAmp=false) {
   // sound waveform controls how far and in which direction each point of the scribble moves from its center. Loud sounds stretch the scribble outward, quiet sounds keep it tight.
   // TODO still need to solve the scale down, so that we can't draw outside the canvas
-  strokeWeight(4);
+  strokeWeight(scribbleStrokeWeight);
   beginShape();
 
   let waveformLength = waveform.length;
