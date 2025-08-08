@@ -101,10 +101,11 @@ function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp, useinternalAm
     // go back to noise and use: https://p5js.org/reference/p5/noiseDetail/
     //https://p5js.org/reference/p5/randomGaussian/
     // or 2d? https://p5js.org/reference/p5/noise/
-
+    if(n>=1 && n<max_data_points_per_scribble-1){ // this fixes the extra 2 dots
+      drawControllerPoints(x,y,amp);}
     curveVertex(x, y);
     // console.log("DEBUG singleLetterCandidate_waveform_n_amp amp: " + amp);
-    drawControllerPoints(x,y,amp);
+    
   }
   endShape();
 }
@@ -113,6 +114,7 @@ function singleLetterCandidate_waveform_n_amp(i, j, waveform, amp, useinternalAm
 function drawControllerPoints(x,y,amp=10)
 {
   // future emphasis location: like dots in fonts?
+  // look at https://www.geeksforgeeks.org/javascript/p5-js-curvepoint-function/
 
   // uses amp for controller point size:
   // using getLevel() inside the draw() function, which returns the volume of a sound at the given time of each frame
@@ -121,17 +123,17 @@ function drawControllerPoints(x,y,amp=10)
   // stroke("red");
   noStroke();
   fill("red");
-  let tempamp;
-  if (!INTERNALAUDIOMODE) 
-    {
-      tempamp = ampAmplification;
-      ampAmplification=1000; // TODO place in toggle
-    }
+  // let tempamp; // QUICKFIX
+  // if (!INTERNALAUDIOMODE) 
+  //   {
+  //     tempamp = ampAmplification;
+  //     ampAmplification=1000; // TODO place in toggle
+  //   }
   circle(x, y, amp*ampAmplification);
-  if (!INTERNALAUDIOMODE)
-    {
-      ampAmplification=tempamp; // TODO place in toggle
-    }
+  // if (!INTERNALAUDIOMODE)
+  //   {
+  //     ampAmplification=tempamp; // TODO place in toggle
+  //   }
   pop();
 }
 
@@ -163,7 +165,7 @@ function drawWaveform(waveform)
   }
 }
 
-function drawSingleLetterPR() { // TODO rename this, it's not the single... it draws a matrix
+function drawSingleLetterPR() { // it draws a matrix, not single...
   noFill();
   stroke("#282828");
   scribble_spacing = min(width, height) / number_of_scribbles;

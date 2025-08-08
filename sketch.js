@@ -26,7 +26,7 @@ let scribble_spacing;
 // waveformAmplification: since we're drawing circles - we get an interesting pattern above value of 3
 // note: if the scribble is too much of a circle - use a lower value
 let waveformAmplification = 5; 
-let ampAmplification = 300;//180;
+let ampAmplification = 100;//180;
 let extraSpacingInbetween = 0;
 let scribbleStrokeWeight = 3;
 let number_of_scribbles = 2; // min is 2, not exactly "number"...
