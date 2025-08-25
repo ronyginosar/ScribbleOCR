@@ -26,10 +26,10 @@ let scribble_spacing;
 // waveformAmplification: since we're drawing circles - we get an interesting pattern above value of 3
 // note: if the scribble is too much of a circle - use a lower value
 let waveformAmplification = 5; 
-let ampAmplification = 400;//180;
+let ampAmplification = 18;
 let extraSpacingInbetween = 0;
 let scribbleStrokeWeight = 3;
-let number_of_scribbles = 10; // min is 2, not exactly "number"...
+let number_of_scribbles = 2; // min is 2, not exactly "number"...
 let max_data_points_per_scribble = 10;
 let data_spread_per_scribble = 2; // higher is narrower (smaller letter)
 let constrain_scribble_range = 50;
@@ -48,7 +48,7 @@ let TWO_MINUTES = 60*2*60; // 2 minutes
 function preload(){
   // if(INTERNALAUDIOMODE) {
   // load anyway to use.... otherwise need a flag and not toggle
-    audiofile = loadSound('/assets/Alto_score_simulation-for-rony_5th-movement.wav');
+    // audiofile = loadSound('/assets/Alto_score_simulation-for-rony_5th-movement.wav');
   // }
 }
 
@@ -58,21 +58,21 @@ function setup() {
     pixelDensity(10);
   }
 
-  canvas = createCanvas(windowWidth, windowHeight-40);
+  canvas = createCanvas(windowWidth, windowHeight);
   reset();
     
-  // ui
-  btnMic = createButton("Mic ON/OFF");
-  btnExport = createButton("Export");
-  btnInternalAudio = createButton("Internal Audio");
+  // // ui
+  // btnMic = createButton("Mic ON/OFF");
+  // btnExport = createButton("Export");
+  // btnInternalAudio = createButton("Internal Audio");
 
-  btnExport.mousePressed(() => { 
-    saveCanvas('scribble.png'); 
-  });
+  // btnExport.mousePressed(() => { 
+  //   saveCanvas('scribble.png'); 
+  // });
 
-  // toggle inputs
-  btnMic.mousePressed(toggleMic);
-  btnInternalAudio.mousePressed(toggleInternalAudio);
+  // // toggle inputs
+  // btnMic.mousePressed(toggleMic);
+  // btnInternalAudio.mousePressed(toggleInternalAudio);
   
   // future: put this in soundController
   // https://js6450.github.io/sound-p5-part1.html
@@ -81,6 +81,23 @@ function setup() {
 
 
   audio = new p5.AudioIn(); // init as mic, later we can switch to audiofile
+
+  // SOUNDCARD
+  // Replace DEVICE_ID with the one you found in console
+  // let constraints = {
+  //   audio: {
+  //     deviceId: "Scarlett 2i4 USB",
+  //     echoCancellation: false
+  //   }
+  // };
+
+  // audio.start(constraints, () => {
+  //   console.log("Mic started with external sound card input");
+  // });
+
+  // SOUNDCARD
+
+
   fft = new p5.FFT();
   amp = new p5.Amplitude();
 
@@ -103,6 +120,13 @@ function draw() {
     // audio = audiofile;
   // }
 
+  // SOUNDCARD
+  // audio = new p5.AudioIn();
+
+  audio.start();
+  fft.setInput(audio);
+  amp.setInput(audio);
+
   // cont. 'draw' of data
   // todo return to this, see
   // https://p5js.org/examples/advanced-canvas-rendering-create-graphics/
@@ -115,7 +139,7 @@ function draw() {
   //   image(soundVisualizerCanvas, 0, 0); // draw ON TOP of main canvas
   // }
 
-  if ((micEnabled || INTERNALAUDIOMODE) && !PRMODE) {
+  // if ((micEnabled || INTERNALAUDIOMODE) && !PRMODE) { // SOUNDCARD
 
     // change scribble parameters based on play time
     // // SITESPECIFIC make this longer
@@ -134,13 +158,14 @@ function draw() {
     // console.log("Mic level: " + ampLevel.toPrecision(2));
     // console.log("AMP : " + amp.getLevel()); // same as direct mic
 
-    // we "init" twice this ampLevel, it seems they are different objects and need to run one over the other
-    if (INTERNALAUDIOMODE) {
-      var ampLevel = amp.getLevel(); // get the level of the audio file
-    } else {
-      var ampLevel = audio.getLevel(); // get the level of the mic input
-    }
+    // // we "init" twice this ampLevel, it seems they are different objects and need to run one over the other
+    // if (INTERNALAUDIOMODE) {
+    //   var ampLevel = amp.getLevel(); // get the level of the audio file
+    // } else {
+    //   var ampLevel = audio.getLevel(); // get the level of the mic input
+    // }
 
+    var ampLevel = amp.getLevel();
 
     //FFT (Fast Fourier Transform) is an analysis algorithm that isolates individual audio frequencies within a waveform. The p5.FFT object can return two types of data in arrays via two different functions: waveform() and analyze()
     // waveform(): Returns an array of amplitude values (between -1.0 and 1.0) along the time domain (a sample of time)
@@ -216,6 +241,35 @@ function draw() {
     // future look into onPeak
     // onPeak accepts two arguments: a function to call when a peak is detected. The value of the peak, between 0.0 and 1.0, is passed to the callback.
   }
+// }
+
+
+//
+// let waveformAmplification = 5; 
+// let ampAmplification = 18;
+// let extraSpacingInbetween = 0;
+// let scribbleStrokeWeight = 3;
+// let number_of_scribbles = 2; // min is 2, not exactly "number"...
+// let max_data_points_per_scribble = 10;
+
+function keyPressed() {
+  if (keyCode === LEFT_ARROW) {
+    number_of_scribbles = constrain(number_of_scribbles + 1, 2, 10);
+
+  } else if (keyCode === RIGHT_ARROW) {
+    number_of_scribbles = constrain(number_of_scribbles - 1, 2, 10);
+  } else if (keyCode === UP_ARROW) {
+
+    scribbleStrokeWeight = constrain(scribbleStrokeWeight + 1, 1, 100);
+    ampAmplification = constrain(ampAmplification + 10, 1, 100);
+
+  } else if (keyCode === DOWN_ARROW) {
+
+    scribbleStrokeWeight = constrain(scribbleStrokeWeight - 1, 1, 100);
+    ampAmplification = constrain(ampAmplification - 10, 1, 100);
+  }
+  // prevent any default behavior.
+  return false;
 }
 
 function doubleClicked() {
